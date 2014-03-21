@@ -76,7 +76,7 @@ class Parser {
 			float origin = float(list[1]);
 			if (Float.isNaN(origin)) {
 				if (verbose) {
-					System.out.println("Parser: Origin is NaN for entry #" + i + ". Setting default value of 0.");
+					System.out.println("Parser: Origin is NaN (" + list[1] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				origin = 0.0;
 			}
@@ -84,7 +84,7 @@ class Parser {
 			float id = float(list[2]);
 			if (Float.isNaN(id)) {
 				if (verbose) {
-					System.out.println("Parser: ID is NaN for entry #" + i + ". Setting default value of 0.");
+					System.out.println("Parser: ID is NaN (" + list[2] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				id = 0.0;
 			}
@@ -96,7 +96,7 @@ class Parser {
 			float lat = float(list[6]);
 			if (Float.isNaN(lat)) {
 				if (verbose) {
-					System.out.println("Parser: Latitude is NaN for entry #" + i + ". Setting default value of 0.");
+					System.out.println("Parser: Latitude is NaN (" + list[6] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				lat = 0.0;
 			}
@@ -104,7 +104,7 @@ class Parser {
 			float lon = float(list[7]);
 			if (Float.isNaN(lon)) {
 				if (verbose) {
-					System.out.println("Parser: Longitude is NaN for entry #" + i + ". Setting default value of 0.");
+					System.out.println("Parser: Longitude is NaN (" + list[7] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				lon = 0.0;
 			}
@@ -112,7 +112,7 @@ class Parser {
 			float mb = float(list[8]);
 			if (Float.isNaN(mb)) {
 				if (verbose) {
-					System.out.println("Parser: mb is NaN for entry #" + i + ". Setting default value of 0.");
+					System.out.println("Parser: mb is NaN (" + list[8] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				mb = 0.0;
 			}
@@ -120,7 +120,7 @@ class Parser {
 			float ms = float(list[9]);
 			if (Float.isNaN(ms)) {
 				if (verbose) {
-					System.out.println("Parser: Ms is NaN for entry #" + i + ". Setting default value of 0.");
+					System.out.println("Parser: Ms is NaN (" + list[9] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				ms = 0.0;
 			}
@@ -128,7 +128,7 @@ class Parser {
 			float depth = float(list[10]);
 			if (Float.isNaN(depth)) {
 				if (verbose) {
-					System.out.println("Parser: Depth is NaN for entry #" + i + ". Setting default value of 0.");
+					System.out.println("Parser: Depth is NaN (" + list[10] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				depth = 0.0;
 			}
@@ -136,7 +136,7 @@ class Parser {
 			float yield_l = float(list[11]);
 			if (Float.isNaN(yield_l)) {
 				if (verbose) {
-					System.out.println("Parser: Yield l is NaN for entry #" + i + ". Setting default value of 0.");
+					System.out.println("Parser: Yield l is NaN (" + list[11] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				yield_l = 0.0;
 			}
@@ -144,7 +144,7 @@ class Parser {
 			float yield_u = float(list[12]);
 			if (Float.isNaN(yield_u)) {
 				if (verbose) {
-					System.out.println("Parser: Yield u is NaN for entry #" + i + ". Setting default value of 0.");
+					System.out.println("Parser: Yield u is NaN (" + list[12] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				yield_u = 0.0;
 			}
