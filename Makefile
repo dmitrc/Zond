@@ -1,5 +1,5 @@
 CC = processing-java
-PWD = $(shell pwd)
+PWD = "$(shell pwd)"
 SRC_DIR = $(PWD)/src
 BIN_DIR = $(PWD)/bin
 OBJ_DIR = $(PWD)/obj

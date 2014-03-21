@@ -6,7 +6,7 @@ class Datapoint {
 	public float id; // to allow check for NaN
 	public String country;
 	public String region;
-	public String sou;
+	public String source;
 	public float lat;
 	public float lon;
 	public float mb;
@@ -17,16 +17,17 @@ class Datapoint {
 	public String purpose;
 	public String name;
 	public String type;
+	public Datapoint[] dataset;
 
 	public Datapoint() {}
 
-	public Datapoint(String new_date, float new_origin, float new_id, String new_country, String new_region, String new_sou, float new_lat, float new_lon, float new_mb, float new_ms, float new_depth, float new_yield_l, float new_yield_u, String new_purpose, String new_name, String new_type) {
+	public Datapoint(String new_date, float new_origin, float new_id, String new_country, String new_region, String new_source, float new_lat, float new_lon, float new_mb, float new_ms, float new_depth, float new_yield_l, float new_yield_u, String new_purpose, String new_name, String new_type) {
 		date = new_date;
 		origin = new_origin;
 		id = new_id;
 		country = new_country;
 		region = new_region;
-		sou = new_sou;
+		source = new_source;
 		lat = new_lat;
 		lon = new_lon;
 		mb = new_mb;
@@ -65,7 +66,7 @@ class Parser {
 			System.out.println("Parser: File " + filename + " read. " + count + " lines extracted.");
 		}
 
-		Datapoint[] dataset = new Datapoint[count];
+		dataset = new Datapoint[count];
 
 		for (int i = 0; i < count; i++) {
 			String[] list = split(data[i],",");
@@ -91,7 +92,7 @@ class Parser {
 
 			String country = list[3];
 			String region = list[4];
-			String sou = list[5];
+			String source = list[5];
 
 			float lat = float(list[6]);
 			if (Float.isNaN(lat)) {
@@ -153,12 +154,68 @@ class Parser {
 			String name = list[14];
 			String type = list[15];
 
-			dataset[i] = new Datapoint(date, origin, id, country, region, sou, lat, lon, mb, ms, depth, yield_l, yield_u, purpose, name, type);
+			dataset[i] = new Datapoint(date, origin, id, country, region, source, lat, lon, mb, ms, depth, yield_l, yield_u, purpose, name, type);
 		}
 
 		if (verbose) {
 			System.out.println("Parser: File successfully imported.");
 		}
 		return dataset;
+	}
+
+	public void print_unique(HashSet<String> options) {
+		boolean doCountry = false;
+		boolean doRegion = false;
+		boolean doSource = false;
+		boolean doPurpose = false;
+		boolean doName = false;
+		boolean doType = false;
+
+		if (options == null) {
+			doCountry = true;
+			doRegion = true;
+			doSource = true;
+			doPurpose = true;
+			doName = true;
+			doType = true;
+		}
+		else {
+			if (options.contains("country")) doCountry = true;
+			if (options.contains("region")) doRegion = true;
+			if (options.contains("source")) doSource = true;
+			if (options.contains("purpose")) doPurpose = true;
+			if (options.contains("name")) doName = true;
+			if (options.contains("type")) doType = true;
+		}
+
+		if (dataset == null) {
+			if (verbose) {
+				System.out.println("Parser: Can't print unique values, because dataset is NULL.");
+			}
+			return;
+		}
+
+		HashSet<String> countrySet = new HashSet<String>();
+		HashSet<String> regionSet = new HashSet<String>();
+		HashSet<String> sourceSet = new HashSet<String>();
+		HashSet<String> purposeSet = new HashSet<String>();
+		HashSet<String> nameSet = new HashSet<String>();
+		HashSet<String> typeSet = new HashSet<String>();
+
+		for (int i = 0; i < dataset.length; i++) {
+			if (doCountry) countrySet.add(dataset[i].country);
+			if (doRegion) regionSet.add(dataset[i].region);
+			if (doSource) sourceSet.add(dataset[i].source);
+			if (doPurpose) purposeSet.add(dataset[i].purpose);
+			if (doName) nameSet.add(dataset[i].name);
+			if (doType) typeSet.add(dataset[i].type);
+		}
+
+		if (doCountry) System.out.println("Parser: Countries:\n-> " + countrySet);
+		if (doRegion) System.out.println("Parser: Regions:\n-> " + regionSet);
+		if (doSource) System.out.println("Parser: Sources:\n-> " + sourceSet);
+		if (doPurpose) System.out.println("Parser: Purposes:\n-> " + purposeSet);
+		if (doName) System.out.println("Parser: Names:\n-> " + nameSet);
+		if (doType) System.out.println("Parser: Types:\n-> " + typeSet);
 	}
 };
