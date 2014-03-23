@@ -14,7 +14,9 @@ void setup() {
 	options.add("purpose");
 	options.add("country");
 	options.add("type");
-	parser.print_unique(options);
+	parser.print_unique(dataset, options);
+
+	Sonify sonify = new Sonify(dataset);
 }
 
 void draw() {

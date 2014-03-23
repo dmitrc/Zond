@@ -17,7 +17,6 @@ class Datapoint {
 	public String purpose;
 	public String name;
 	public String type;
-	public Datapoint[] dataset;
 
 	public Datapoint() {}
 
@@ -66,7 +65,7 @@ class Parser {
 			System.out.println("Parser: File " + filename + " read. " + count + " lines extracted.");
 		}
 
-		dataset = new Datapoint[count];
+		Datapoint[] dataset = new Datapoint[count];
 
 		for (int i = 0; i < count; i++) {
 			String[] list = split(data[i],",");
@@ -163,7 +162,7 @@ class Parser {
 		return dataset;
 	}
 
-	public void print_unique(HashSet<String> options) {
+	public void print_unique(Datapoint[] dataset, HashSet<String> options) {
 		boolean doCountry = false;
 		boolean doRegion = false;
 		boolean doSource = false;
