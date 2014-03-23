@@ -16,7 +16,9 @@ void setup() {
 	options.add("type");
 	parser.print_unique(dataset, options);
 
-	Sonify sonify = new Sonify(dataset);
+	Sonify sonify = new Sonify(dataset, true);
+	//sonify.play_sine();
+	//sonify.play_sample();
 }
 
 void draw() {

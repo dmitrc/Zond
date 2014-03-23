@@ -41,14 +41,12 @@ class Datapoint {
 };
 
 class Parser {
-	boolean verbose;
+	boolean verbose = false;
 
-	public Parser() {
-		verbose = false;
-	}
+	public Parser() {}
 
-	public Parser(boolean new_verbose) {
-		verbose = new_verbose;
+	public Parser(boolean v) {
+		verbose = v;
 	}
 
 	public Datapoint[] parse_file (String filename) {
