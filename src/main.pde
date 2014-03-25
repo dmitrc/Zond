@@ -18,7 +18,7 @@ void setup() {
 
 	Sonify sonify = new Sonify(dataset, true);
 	//sonify.play_sine();
-	//sonify.play_sample();
+	sonify.play_sample();
 }
 
 void draw() {

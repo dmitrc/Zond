@@ -22,9 +22,10 @@ class Sonify {
 		verbose = v;
 	}
 
-	public void set_samples(String france, String usa, String china, String uk, String ussr, String pakistan) {
+	public void set_samples(String china, String france, String pakistan, String uk, String usa, String ussr) {
 		franceSample = sketchPath("") + "../audio/" + france;
 		usaSample = sketchPath("") + "../audio/" + usa;
+		ukSample = sketchPath("") + "../audio/" + uk;
 		chinaSample = sketchPath("") + "../audio/" + china;
 		ussrSample = sketchPath("") + "../audio/" + ussr;
 		pakistanSample = sketchPath("") + "../audio/" + pakistan;
