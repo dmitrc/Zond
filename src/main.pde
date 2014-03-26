@@ -16,16 +16,21 @@ void setup() {
 	options.add("type");
 	parser.print_unique(dataset, options);
 
-	Sonify sonify = new Sonify(dataset, true);
+	final Sonify sonify = new Sonify(dataset, true);
 	sonify.sample_init();
 	//sonify.play_sine();
 	//sonify.play_sample();
 
-	
-	for (int i=0; i<dataset.length; i++){
-		sonify.soundTheAlarm(dataset[i]);
+	Runnable runnable = new Runnable(){
+		public void run(){
+			for (int i=0; i<dataset.length; i++){
+				sonify.soundTheAlarm(dataset[i]);
+			}
+		}
+	};
 
-	}
+	Thread thread = new Thread(runnable);
+	thread.start();
 	
 
 }

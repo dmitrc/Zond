@@ -24,6 +24,8 @@ class Sonify {
 
 	public AudioContext ac=null;
 
+	public Compressor comp=null;
+
 
 	Sonify(Datapoint[] d) {
 		dataset = d;
@@ -46,6 +48,8 @@ class Sonify {
 	public void sample_init(){
 		try{
 			ac=new AudioContext();
+			comp=new Compressor(ac);
+			ac.out.addInput(comp);
 			/*franceSample = new Sample(franceFile);
 			usaSample = new Sample(franceFile);
 			chinaSample = new Sample(franceFile);	
@@ -101,7 +105,8 @@ class Sonify {
 		Gain g = new Gain(ac, 1, 1.0);
 
 		g.addInput(sp);
-		ac.out.addInput(g);
+		comp.addInput(g);
+		//ac.out.addInput(g);
 		ac.start();
 	}
 };
