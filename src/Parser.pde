@@ -41,7 +41,7 @@ class Datapoint {
 };
 
 class Parser {
-	boolean verbose = false;
+	private boolean verbose = false;
 
 	public Parser() {}
 
