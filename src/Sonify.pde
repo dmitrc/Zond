@@ -5,6 +5,7 @@ class Sonify {
 	public Datapoint[] dataset = null;
 	public boolean verbose = false;
 
+
 	// Default settings
 	public String franceSample = sketchPath("") + "../audio/france.wav";
 	public String usaSample = sketchPath("") + "../audio/usa.wav";
@@ -34,6 +35,10 @@ class Sonify {
 	// Set all the filter settings
 	
 	// Method to produce a note at this point of dataset
+
+	public void soundTheAlarm(Datapoint point){
+		play_sample();
+	}
 	
 	// Derping around
 	public void play_sine() {

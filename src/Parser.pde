@@ -1,6 +1,7 @@
 import java.util.*;
 
 class Datapoint {
+
 	public String date;
 	public float origin;
 	public float id; // to allow check for NaN
@@ -17,10 +18,12 @@ class Datapoint {
 	public String purpose;
 	public String name;
 	public String type;
-
+	public long timeSince; //using time since last detonation is convenient for purposes
+							//in the loop after playing each sample call wait(timeSince)
+							//before playing next entry;
 	public Datapoint() {}
 
-	public Datapoint(String new_date, float new_origin, float new_id, String new_country, String new_region, String new_source, float new_lat, float new_lon, float new_mb, float new_ms, float new_depth, float new_yield_l, float new_yield_u, String new_purpose, String new_name, String new_type) {
+	public Datapoint(String new_date, float new_origin, float new_id, String new_country, String new_region, String new_source, float new_lat, float new_lon, float new_mb, float new_ms, float new_depth, float new_yield_l, float new_yield_u, String new_purpose, String new_name, String new_type, long new_time_since) {
 		date = new_date;
 		origin = new_origin;
 		id = new_id;
@@ -37,10 +40,17 @@ class Datapoint {
 		purpose = new_purpose;
 		name = new_name;
 		type = new_type;
+		timeSince = new_time_since;
 	}
 };
 
 class Parser {
+
+	public static final float SECS_DURATION=660;
+	public static final float MSEC_TIME=1000*(SECS_DURATION/((98*365+5*30+30)-(45*365+7*30+16)));
+
+	long lastTime=dateToDelta("450716",0); //time of prev explosion
+	
 	private boolean verbose = false;
 
 	public Parser() {}
@@ -50,6 +60,7 @@ class Parser {
 	}
 
 	public Datapoint[] parse_file (String filename) {
+
 	
 		String[] data = loadStrings("../data/"+filename);	
 		int count = data.length;
@@ -70,6 +81,8 @@ class Parser {
 
 			// TODO: Check all this for validity!
 			String date = list[0];
+
+			long timeSince=dateToDelta(date,lastTime); //Changes Date value into a delta
 
 			float origin = float(list[1]);
 			if (Float.isNaN(origin)) {
@@ -151,7 +164,7 @@ class Parser {
 			String name = list[14];
 			String type = list[15];
 
-			dataset[i] = new Datapoint(date, origin, id, country, region, source, lat, lon, mb, ms, depth, yield_l, yield_u, purpose, name, type);
+			dataset[i] = new Datapoint(date, origin, id, country, region, source, lat, lon, mb, ms, depth, yield_l, yield_u, purpose, name, type, timeSince);
 		}
 
 		if (verbose) {
@@ -214,5 +227,22 @@ class Parser {
 		if (doPurpose) System.out.println("Parser: Purposes:\n-> " + purposeSet);
 		if (doName) System.out.println("Parser: Names:\n-> " + nameSet);
 		if (doType) System.out.println("Parser: Types:\n-> " + typeSet);
+	}
+
+	public long dateToDelta(String date, long lastTime){ //selfexplanatory function name is selfexplanatory
+
+		int year,month,day;
+		year=Character.getNumericValue(date.charAt(0))*10+Character.getNumericValue(date.charAt(1));
+		month=Character.getNumericValue(date.charAt(2))*10+Character.getNumericValue(date.charAt(3));
+		day=Character.getNumericValue(date.charAt(4))*10+Character.getNumericValue(date.charAt(5));
+		long time=(long)((year*360+month*30+day)*MSEC_TIME); //assumes month=30days. should be good enough.
+		long out=time-lastTime;
+		if(out<0){
+			System.out.println(date+"\n"+year+month+day+"\n"+time+"\n"+lastTime+"\n"+out+"\n");
+		}
+		this.lastTime=time;
+
+
+		return out;
 	}
 };

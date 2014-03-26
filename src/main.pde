@@ -18,7 +18,20 @@ void setup() {
 
 	Sonify sonify = new Sonify(dataset, true);
 	//sonify.play_sine();
-	sonify.play_sample();
+	//sonify.play_sample();
+
+	
+	for (int i=0; i<dataset.length; i++){
+		sonify.soundTheAlarm(dataset[i]);
+		try{
+			Thread.sleep(dataset[i].timeSince);
+		}
+		catch (InterruptedException e){
+			System.out.println("gotta catch 'em all!");
+		}
+	}
+	
+
 }
 
 void draw() {
