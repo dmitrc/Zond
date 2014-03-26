@@ -22,13 +22,15 @@ void setup() {
 
 	
 	for (int i=0; i<dataset.length; i++){
-		sonify.soundTheAlarm(dataset[i]);
+		System.out.println("wait= "+dataset[i].timeSince);
 		try{
 			Thread.sleep(dataset[i].timeSince);
 		}
 		catch (InterruptedException e){
 			System.out.println("gotta catch 'em all!");
 		}
+		sonify.soundTheAlarm(dataset[i]);
+
 	}
 	
 
