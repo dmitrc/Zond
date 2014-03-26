@@ -17,18 +17,12 @@ void setup() {
 	parser.print_unique(dataset, options);
 
 	Sonify sonify = new Sonify(dataset, true);
+	sonify.sample_init();
 	//sonify.play_sine();
 	//sonify.play_sample();
 
 	
 	for (int i=0; i<dataset.length; i++){
-		System.out.println("wait= "+dataset[i].timeSince);
-		try{
-			Thread.sleep(dataset[i].timeSince);
-		}
-		catch (InterruptedException e){
-			System.out.println("gotta catch 'em all!");
-		}
 		sonify.soundTheAlarm(dataset[i]);
 
 	}

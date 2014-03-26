@@ -237,12 +237,7 @@ class Parser {
 		day=Character.getNumericValue(date.charAt(4))*10+Character.getNumericValue(date.charAt(5));
 		long time=(long)((year*360+month*30+day)*MSEC_TIME); //assumes month=30days. should be good enough.
 		long out=time-lastTime;
-		if(out<0){
-			System.out.println(date+"\n"+year+month+day+"\n"+time+"\n"+lastTime+"\n"+out+"\n");
-		}
 		this.lastTime=time;
-
-
 		return out;
 	}
 };
