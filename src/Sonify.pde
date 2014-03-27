@@ -22,6 +22,8 @@ class Sonify {
 	public Sample pakistanSample = null;
 	public Sample sampleSample = null;
 
+	public SamplePlayer samplePlayer = null;
+
 	public AudioContext ac=null;
 
 	public Compressor comp=null;
@@ -29,11 +31,13 @@ class Sonify {
 
 	Sonify(Datapoint[] d) {
 		dataset = d;
+		init();
 	}
 
 	Sonify(Datapoint[] d, boolean v) {
 		dataset = d;
 		verbose = v;
+		init();
 	}
 
 	public void set_samples(String china, String france, String pakistan, String uk, String usa, String ussr) {
@@ -45,7 +49,7 @@ class Sonify {
 		pakistanFile = sketchPath("") + "../audio/" + pakistan;
 	}
 
-	public void sample_init(){
+	public void init(){
 		try{
 			ac=new AudioContext();
 			comp=new Compressor(ac);
@@ -57,32 +61,25 @@ class Sonify {
 			ussrSample = new Sample(franceFile);
 			pakistanSample = new Sample(franceFile);*/
 			sampleSample = new Sample(sampleFile);
+			samplePlayer = new SamplePlayer(sampleSample);
 		}
 		catch(Exception e){
 			System.out.println("Can't open specified file");
 		}
+
 	}
 
 	// Set all the filter settings
 	
 	// Method to produce a note at this point of dataset
 
-	public void soundTheAlarm(Datapoint point){
-
-		System.out.println("wait= "+point.timeSince+"\n"+"date= "+point.date);
-		try{
-			Thread.sleep(point.timeSince);
-		}
-		catch (InterruptedException e){
-			System.out.println("gotta catch 'em all!");
-		}
+	public void play(int i){
+		update(i);		
 		play_sample();
+	}
 
-		PFont f = createFont("Arial",16,true);
-		textFont(f,16);                 // STEP 4 Specify font to be used
-  		fill(0);                        // STEP 5 Specify font color 
-  		background(255);
-  		text(point.date,10,100); // STEP 6 Display Text
+	public void update(int i){
+
 	}
 	
 	// Derping around
