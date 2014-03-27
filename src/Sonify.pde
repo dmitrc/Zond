@@ -53,6 +53,7 @@ class Sonify {
 		try{
 			ac = new AudioContext();
 			comp = new Compressor(ac);
+			comp.setThreshold(0.3f);
 			ac.out.addInput(comp);
 			/*franceSample = new Sample(franceFile);
 			usaSample = new Sample(franceFile);
@@ -105,7 +106,7 @@ class Sonify {
 		}
 
 		sp.setKillOnEnd(true);
-		Gain g = new Gain(ac, 1, 1.0);
+		Gain g = new Gain(ac, 1, 0.4);
 
 		g.addInput(sp);
 		comp.addInput(g);
