@@ -55,14 +55,13 @@ class Sonify {
 			comp = new Compressor(ac);
 			comp.setThreshold(0.3f);
 			ac.out.addInput(comp);
-			/*franceSample = new Sample(franceFile);
-			usaSample = new Sample(franceFile);
-			chinaSample = new Sample(franceFile);	
-			ukSample = new Sample(franceFile);
-			ussrSample = new Sample(franceFile);
-			pakistanSample = new Sample(franceFile);*/
+			//franceSample = new Sample(franceFile);
+			//usaSample = new Sample(franceFile);
+			chinaSample = new Sample(ukFile);	
+			ukSample = new Sample(ukFile);
+			//ussrSample = new Sample(franceFile);
+			//pakistanSample = new Sample(franceFile);*/			
 			sampleSample = new Sample(sampleFile);
-			samplePlayer = new SamplePlayer(ac, sampleSample);
 		}
 		catch(Exception e){
 			System.out.println("Can't open specified file");
@@ -76,7 +75,7 @@ class Sonify {
 
 	public void play(int i){
 		update(i);		
-		play_sample();
+		play_sample(i);
 	}
 
 	public void update(int i){
@@ -93,12 +92,26 @@ class Sonify {
 		ac.start();
 	}
 
-	public void play_sample() {
+	public void play_sample(int i) {
 		//ac=new AudioContext();
 		SamplePlayer sp;
 
 		try { 
-		 	sp = new SamplePlayer(ac, sampleSample);
+			if(dataset[i].country.toLowerCase().equals("china")){
+				println("yle1");
+			 	sp = new SamplePlayer(ac, chinaSample);
+		 	}
+		 	else if(dataset[i].country.toLowerCase().equals("uk")){
+				println("yle2");
+				sp = new SamplePlayer(ac, ukSample);
+			}
+		 	else {
+		 		println("yle3");
+		 		sp=new SamplePlayer(ac, sampleSample);
+		 	}
+		 	System.out.println(dataset[i].country);
+		 	System.out.println(dataset[i].country.toLowerCase());
+
 		}
 		catch(Exception e) {
 			println("Sonify: Error! Couldn't load the sample!");

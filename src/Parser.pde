@@ -46,7 +46,7 @@ class Datapoint {
 
 class Parser {
 
-	public static final float SECS_DURATION=60;
+	public static final float SECS_DURATION=660;
 	public static final float MSEC_TIME=1000*(SECS_DURATION/((98*365+5*30+30)-(45*365+7*30+16)));
 
 	long lastTime=dateToDelta("450716",0); //time of prev explosion
