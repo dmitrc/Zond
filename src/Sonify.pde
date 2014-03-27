@@ -51,8 +51,8 @@ class Sonify {
 
 	public void init(){
 		try{
-			ac=new AudioContext();
-			comp=new Compressor(ac);
+			ac = new AudioContext();
+			comp = new Compressor(ac);
 			ac.out.addInput(comp);
 			/*franceSample = new Sample(franceFile);
 			usaSample = new Sample(franceFile);
@@ -61,7 +61,7 @@ class Sonify {
 			ussrSample = new Sample(franceFile);
 			pakistanSample = new Sample(franceFile);*/
 			sampleSample = new Sample(sampleFile);
-			samplePlayer = new SamplePlayer(sampleSample);
+			samplePlayer = new SamplePlayer(ac, sampleSample);
 		}
 		catch(Exception e){
 			System.out.println("Can't open specified file");

@@ -1,13 +1,13 @@
 import java.util.*;
 
-Datapoint[] dataset;
-Thread thread;
-final Sonify sonify;
-final Drawer drawer;
+Datapoint[] dataset = null;
+Thread thread = null;
+Sonify sonify = null;
+Drawer drawer = null;
 
 void setup() {
-	size(26, 100);
-	background(255);
+	size(100, 40);
+	background(0);
 
 	Parser parser = new Parser(true);
 	dataset = parser.parse_file("dataset.csv");
@@ -20,27 +20,21 @@ void setup() {
 
 	sonify = new Sonify(dataset, true);
 	drawer = new Drawer(dataset, true);
-
-	run();	
-}
-
-void draw() {}
-
-void run() {
+	
 	Runnable runnable = new Runnable(){
 		public void run(){
 			for (int i = 0; i < dataset.length; i++) {
-				System.out.println("Datapoint #" + (i+1) + ". Date: ", dataset[i].date);
-
 				try {
-					Thread.sleep(point.timeSince);
+					Thread.sleep(dataset[i].timeSince);
 				}
 				catch (InterruptedException e) {
-					System.out.println("gotta catch 'em all!");
+					System.out.println("Sleep was interruped! :(");
+					exit();
 				}
 
-				sonify.play(i);
+				System.out.println("Datapoint #" + (i+1) + ". Date: " + dataset[i].date);
 				drawer.draw(i);
+				sonify.play(i);
 			}
 		}
 	};
@@ -48,3 +42,5 @@ void run() {
 	thread = new Thread(runnable);
 	thread.start();
 }
+
+void draw() {}

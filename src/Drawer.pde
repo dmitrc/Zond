@@ -23,6 +23,6 @@ class Drawer {
 
 	public void draw(int i) {
   		background(0);
-  		text(dataset[i].date, 5, 10);
+  		text(dataset[i].date, 12, 20);
 	}
 };
