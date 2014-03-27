@@ -1,12 +1,15 @@
 import java.util.*;
 
+int fade_timeout;
+int next_timeout;
+int current_index = 0;
+
 Datapoint[] dataset = null;
-Thread thread = null;
 Sonify sonify = null;
 Drawer drawer = null;
 
 void setup() {
-	size(100, 40);
+	size(1024, 768);
 	background(0);
 
 	Parser parser = new Parser(true);
@@ -20,27 +23,25 @@ void setup() {
 
 	sonify = new Sonify(dataset, true);
 	drawer = new Drawer(dataset, true);
-	
-	Runnable runnable = new Runnable(){
-		public void run(){
-			for (int i = 0; i < dataset.length; i++) {
-				try {
-					Thread.sleep(dataset[i].timeSince);
-				}
-				catch (InterruptedException e) {
-					System.out.println("Sleep was interruped! :(");
-					exit();
-				}
 
-				System.out.println("Datapoint #" + (i+1) + ". Date: " + dataset[i].date);
-				drawer.draw(i);
-				sonify.play(i);
-			}
-		}
-	};
-
-	thread = new Thread(runnable);
-	thread.start();
+	fade_timeout = millis();
+	next_timeout = millis();
 }
 
-void draw() {}
+void draw() {
+	if (millis() - fade_timeout > 90) {
+		fill(0, 0, 0, 15);
+		rect(0, 0, width, height);
+		fade_timeout = millis();
+	}
+
+	if (millis() - next_timeout > dataset[current_index].timeSince) {
+		next_timeout = millis();
+
+		System.out.println("Datapoint #" + (current_index+1) + ". Date: " + dataset[current_index].date);
+		drawer.draw(current_index);
+		sonify.play(current_index);
+
+		current_index++;
+	}
+}
