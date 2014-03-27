@@ -5,7 +5,7 @@ int current_time = 0;
 
 void setup() {
 	size(200, 200);
-	background(0);
+	background(255);
 
 	Parser parser = new Parser(true);
 	dataset = parser.parse_file("dataset.csv");
@@ -35,6 +35,4 @@ void setup() {
 
 }
 
-void draw() {
-
-}
+void draw() {}
