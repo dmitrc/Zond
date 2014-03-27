@@ -82,7 +82,7 @@ class Sonify {
 		textFont(f,16);                 // STEP 4 Specify font to be used
   		fill(0);                        // STEP 5 Specify font color 
   		background(255);
-  		text(dataset[i].date,10,100);  // STEP 6 Display Text
+  		text(point.date,10,100); // STEP 6 Display Text
 	}
 	
 	// Derping around
