@@ -35,7 +35,11 @@ void draw() {
 		fade_timeout = millis();
 	}
 
-	if (millis() - next_timeout > dataset[current_index].timeSince) {
+	if (current_index >= dataset.length) {
+		// Set GUI to display finished
+		return;
+	}
+	else if (millis() - next_timeout > dataset[current_index].timeSince) {
 		next_timeout = millis();
 
 		System.out.println("Datapoint #" + (current_index+1) + ". Date: " + dataset[current_index].date);
