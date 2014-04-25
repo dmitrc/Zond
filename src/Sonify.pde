@@ -55,9 +55,9 @@ class Sonify {
 			comp = new Compressor(ac);
 			comp.setThreshold(0.3f);
 			ac.out.addInput(comp);
-			//franceSample = new Sample(franceFile);
-			//usaSample = new Sample(franceFile);
-			chinaSample = new Sample(ukFile);	
+			franceSample = new Sample(franceFile);
+			usaSample = new Sample(usaFile);
+			chinaSample = new Sample(chinaFile);	
 			ukSample = new Sample(ukFile);
 			//ussrSample = new Sample(franceFile);
 			//pakistanSample = new Sample(franceFile);*/			
@@ -87,6 +87,7 @@ class Sonify {
 		AudioContext ac = new AudioContext();
 		WavePlayer wp = new WavePlayer(ac, 440, Buffer.SINE);
 		Gain g = new Gain(ac, 1, 0.4);
+
 		g.addInput(wp);
 		ac.out.addInput(g);
 		ac.start();
@@ -95,22 +96,24 @@ class Sonify {
 	public void play_sample(int i) {
 		//ac=new AudioContext();
 		SamplePlayer sp;
-
+		OnePoleFilter filter;
+		Gain g;
 		try { 
 			if(dataset[i].country.toLowerCase().equals("china")){
-				println("yle1");
 			 	sp = new SamplePlayer(ac, chinaSample);
 		 	}
 		 	else if(dataset[i].country.toLowerCase().equals("uk")){
-				println("yle2");
 				sp = new SamplePlayer(ac, ukSample);
 			}
+			else if(dataset[i].country.toLowerCase().equals("usa")){
+				sp = new SamplePlayer(ac, usaSample);
+			}
+			else if(dataset[i].country.toLowerCase().equals("france")){
+				sp = new SamplePlayer(ac, franceSample);
+			}
 		 	else {
-		 		println("yle3");
 		 		sp=new SamplePlayer(ac, sampleSample);
-		 	}
-		 	System.out.println(dataset[i].country);
-		 	System.out.println(dataset[i].country.toLowerCase());
+		 	}	 	
 
 		}
 		catch(Exception e) {
@@ -118,10 +121,23 @@ class Sonify {
 			return;
 		}
 
+		if(dataset[i].depth>0){
+			float ratio = (float) Math.log(6/dataset[i].depth);
+			System.out.println("ratio=" + ratio);
+			filter=new OnePoleFilter(ac,3100*ratio);
+			filter.addInput(sp);
+			System.out.println(filter.getFrequency());
+			g = new Gain(ac, 1, 1);
+			g.addInput(filter);
+		}
+		else{
+			g = new Gain(ac, 1, 1);
+			g.addInput(sp);
+		}
+		//g=new Gain(ac,1,0.4);
+		//g.addInput(sp);
 		sp.setKillOnEnd(true);
-		Gain g = new Gain(ac, 1, 0.4);
-
-		g.addInput(sp);
+		//g.addInput(sp);
 		comp.addInput(g);
 		//ac.out.addInput(g);
 		ac.start();
