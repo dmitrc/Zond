@@ -1,4 +1,5 @@
 import java.util.*;
+import java.text.*;
 
 class Datapoint {
 
@@ -41,6 +42,23 @@ class Datapoint {
 		name = new_name;
 		type = new_type;
 		timeSince = new_time_since;
+	}
+
+	public String print() {
+		String s = "";
+
+		s += date.substring(4,6) + "-" + date.substring(2,4) + "-" + date.substring(0,2);
+
+		if (name != null && !name.isEmpty()) {
+			s += " / " + name; 
+		}
+		else {
+			s += " / <no name>";
+		}
+
+		s += " / " + country;
+
+		return s;
 	}
 };
 
