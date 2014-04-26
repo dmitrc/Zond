@@ -1,6 +1,3 @@
-import java.util.*;
-import java.text.*;
-
 class Datapoint {
 
 	public String date;
@@ -19,9 +16,8 @@ class Datapoint {
 	public String purpose;
 	public String name;
 	public String type;
-	public long timeSince; //using time since last detonation is convenient for purposes
-							//in the loop after playing each sample call wait(timeSince)
-							//before playing next entry;
+	public long time_since; // time since last detonation 
+
 	public Datapoint() {}
 
 	public Datapoint(String new_date, float new_origin, float new_id, String new_country, String new_region, String new_source, float new_lat, float new_lon, float new_mb, float new_ms, float new_depth, float new_yield_l, float new_yield_u, String new_purpose, String new_name, String new_type, long new_time_since) {
@@ -41,7 +37,7 @@ class Datapoint {
 		purpose = new_purpose;
 		name = new_name;
 		type = new_type;
-		timeSince = new_time_since;
+		time_since = new_time_since;
 	}
 
 	public String print() {
@@ -63,57 +59,47 @@ class Datapoint {
 };
 
 class Parser {
+	public static final float SECS_DURATION = 660;
+	public static final float MSEC_TIME = 1000*(SECS_DURATION/((98*365+5*30+30)-(45*365+7*30+16)));
 
-	public static final float SECS_DURATION=660;
-	public static final float MSEC_TIME=1000*(SECS_DURATION/((98*365+5*30+30)-(45*365+7*30+16)));
-
-	long lastTime=dateToDelta("450716",0); //time of prev explosion
-	
-	private boolean verbose = false;
+	private long last_time = dateToDelta("450716",0); // time of previous explosion
 
 	public Parser() {}
 
-	public Parser(boolean v) {
-		verbose = v;
-	}
-
 	public Datapoint[] parse_file (String filename) {
-
 	
 		String[] data = loadStrings("../data/"+filename);	
 		int count = data.length;
 
 		if (data == null) {
-			System.out.println("Error! File " + filename + " can't be opened!");
+			println("Error! File " + filename + " can't be opened!");
 			return null;
 		}
 
-		if (verbose) {
-			System.out.println("Parser: File " + filename + " read. " + count + " lines extracted.");
+		if (debug) {
+			println("Parser: File " + filename + " read. " + count + " lines extracted.");
 		}
 
 		Datapoint[] dataset = new Datapoint[count];
 
 		for (int i = 0; i < count; i++) {
 			String[] list = split(data[i],",");
-
-			// TODO: Check all this for validity!
 			String date = list[0];
 
-			long timeSince=dateToDelta(date,lastTime); //Changes Date value into a delta
+			long time_since = dateToDelta(date,last_time);
 
 			float origin = float(list[1]);
 			if (Float.isNaN(origin)) {
-				if (verbose) {
-					System.out.println("Parser: Origin is NaN (" + list[1] + ") for entry #" + i + ". Setting default value of 0.");
+				if (debug) {
+					println("Parser: Origin is NaN (" + list[1] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				origin = 0.0;
 			}
 
 			float id = float(list[2]);
 			if (Float.isNaN(id)) {
-				if (verbose) {
-					System.out.println("Parser: ID is NaN (" + list[2] + ") for entry #" + i + ". Setting default value of 0.");
+				if (debug) {
+					println("Parser: ID is NaN (" + list[2] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				id = 0.0;
 			}
@@ -124,56 +110,56 @@ class Parser {
 
 			float lat = float(list[6]);
 			if (Float.isNaN(lat)) {
-				if (verbose) {
-					System.out.println("Parser: Latitude is NaN (" + list[6] + ") for entry #" + i + ". Setting default value of 0.");
+				if (debug) {
+					println("Parser: Latitude is NaN (" + list[6] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				lat = 0.0;
 			}
 
 			float lon = float(list[7]);
 			if (Float.isNaN(lon)) {
-				if (verbose) {
-					System.out.println("Parser: Longitude is NaN (" + list[7] + ") for entry #" + i + ". Setting default value of 0.");
+				if (debug) {
+					println("Parser: Longitude is NaN (" + list[7] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				lon = 0.0;
 			}
 
 			float mb = float(list[8]);
 			if (Float.isNaN(mb)) {
-				if (verbose) {
-					System.out.println("Parser: mb is NaN (" + list[8] + ") for entry #" + i + ". Setting default value of 0.");
+				if (debug) {
+					println("Parser: mb is NaN (" + list[8] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				mb = 0.0;
 			}
 
 			float ms = float(list[9]);
 			if (Float.isNaN(ms)) {
-				if (verbose) {
-					System.out.println("Parser: Ms is NaN (" + list[9] + ") for entry #" + i + ". Setting default value of 0.");
+				if (debug) {
+					println("Parser: Ms is NaN (" + list[9] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				ms = 0.0;
 			}
 
 			float depth = float(list[10]);
 			if (Float.isNaN(depth)) {
-				if (verbose) {
-					System.out.println("Parser: Depth is NaN (" + list[10] + ") for entry #" + i + ". Setting default value of 0.");
+				if (debug) {
+					println("Parser: Depth is NaN (" + list[10] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				depth = 0.0;
 			}
 
 			float yield_l = float(list[11]);
 			if (Float.isNaN(yield_l)) {
-				if (verbose) {
-					System.out.println("Parser: Yield l is NaN (" + list[11] + ") for entry #" + i + ". Setting default value of 0.");
+				if (debug) {
+					println("Parser: Yield l is NaN (" + list[11] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				yield_l = 0.0;
 			}
 
 			float yield_u = float(list[12]);
 			if (Float.isNaN(yield_u)) {
-				if (verbose) {
-					System.out.println("Parser: Yield u is NaN (" + list[12] + ") for entry #" + i + ". Setting default value of 0.");
+				if (debug) {
+					println("Parser: Yield u is NaN (" + list[12] + ") for entry #" + i + ". Setting default value of 0.");
 				}
 				yield_u = 0.0;
 			}
@@ -182,11 +168,11 @@ class Parser {
 			String name = list[14];
 			String type = list[15];
 
-			dataset[i] = new Datapoint(date, origin, id, country, region, source, lat, lon, mb, ms, depth, yield_l, yield_u, purpose, name, type, timeSince);
+			dataset[i] = new Datapoint(date, origin, id, country, region, source, lat, lon, mb, ms, depth, yield_l, yield_u, purpose, name, type, time_since);
 		}
 
-		if (verbose) {
-			System.out.println("Parser: File successfully imported.");
+		if (debug) {
+			println("Parser: File successfully imported.");
 		}
 		return dataset;
 	}
@@ -217,8 +203,8 @@ class Parser {
 		}
 
 		if (dataset == null) {
-			if (verbose) {
-				System.out.println("Parser: Can't print unique values, because dataset is NULL.");
+			if (debug) {
+				println("Parser: Can't print unique values, because dataset is NULL.");
 			}
 			return;
 		}
@@ -239,23 +225,23 @@ class Parser {
 			if (doType) typeSet.add(dataset[i].type);
 		}
 
-		if (doCountry) System.out.println("Parser: Countries:\n-> " + countrySet);
-		if (doRegion) System.out.println("Parser: Regions:\n-> " + regionSet);
-		if (doSource) System.out.println("Parser: Sources:\n-> " + sourceSet);
-		if (doPurpose) System.out.println("Parser: Purposes:\n-> " + purposeSet);
-		if (doName) System.out.println("Parser: Names:\n-> " + nameSet);
-		if (doType) System.out.println("Parser: Types:\n-> " + typeSet);
+		if (doCountry) println("Parser: Countries:\n-> " + countrySet);
+		if (doRegion) println("Parser: Regions:\n-> " + regionSet);
+		if (doSource) println("Parser: Sources:\n-> " + sourceSet);
+		if (doPurpose) println("Parser: Purposes:\n-> " + purposeSet);
+		if (doName) println("Parser: Names:\n-> " + nameSet);
+		if (doType) println("Parser: Types:\n-> " + typeSet);
 	}
 
-	public long dateToDelta(String date, long lastTime){ //selfexplanatory function name is selfexplanatory
+	public long dateToDelta(String date, long lt) {
+		int year = Integer.parseInt(date.substring(0,2));
+		int month = Integer.parseInt(date.substring(2,4));
+		int day = Integer.parseInt(date.substring(4,6));
 
-		int year,month,day;
-		year=Character.getNumericValue(date.charAt(0))*10+Character.getNumericValue(date.charAt(1));
-		month=Character.getNumericValue(date.charAt(2))*10+Character.getNumericValue(date.charAt(3));
-		day=Character.getNumericValue(date.charAt(4))*10+Character.getNumericValue(date.charAt(5));
-		long time=(long)((year*360+month*30+day)*MSEC_TIME); //assumes month=30days. should be good enough.
-		long out=time-lastTime;
-		this.lastTime=time;
+		long time = (long)((year*360+month*30+day)*MSEC_TIME); // assumes month = 30days. should be good enough.
+		long out = time - lt;
+		last_time = time;
+
 		return out;
 	}
 };

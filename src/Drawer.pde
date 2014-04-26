@@ -1,9 +1,5 @@
-import java.util.*;
-
 class Drawer {
-	public Datapoint[] dataset = null;
-	public boolean verbose = false;
-
+  
   private int prevX = -1;
   private int prevY = -1;
   private int prevR = -1;
@@ -11,20 +7,7 @@ class Drawer {
   private int prevB = -1;
 
 
-	Drawer(Datapoint[] d) {
-		dataset = d;
-		init();
-	}
-
-  Drawer(Datapoint[] d, int mb_height) {
-    dataset = d;
-    init();
-  }
-
-
-	Drawer(Datapoint[] d, int mb_height, boolean v) {
-		dataset = d;
-		verbose = v;
+	Drawer() {
 		init();
 	}
 
@@ -41,7 +24,7 @@ class Drawer {
     prevB = -1;
 
     fill(20);
-    rect(0, 0, width, height-menubar_height);
+    rect(0, 0, width, height - menubar_height);
   }
 
 	public void draw(int i) {
@@ -114,6 +97,5 @@ class Drawer {
     prevB = b;
 
 		fill(255);
-		//text(dataset[i].name, x-d+10, y+7);
 	}
 };

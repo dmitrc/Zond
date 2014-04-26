@@ -6,6 +6,7 @@ int next_timeout;
 int current_index = 0;
 int menubar_height = 50;
 float speed_multiplier = 1.0;
+boolean debug = true;
 boolean is_playing = true;
 
 Datapoint[] dataset = null;
@@ -17,19 +18,19 @@ void setup() {
 	size(1440, 900);
 	background(20);
 
-	Parser parser = new Parser(true);
+	Parser parser = new Parser();
 	dataset = parser.parse_file("dataset.csv");
 
-	// Debug starts
-	HashSet<String> options = new HashSet<String>();
-	options.add("purpose");
-	options.add("country");
-	options.add("type");
-	parser.print_unique(dataset, options);
-	// Debug ends
+	if (debug) {
+		HashSet<String> options = new HashSet<String>();
+		options.add("purpose");
+		options.add("country");
+		options.add("type");
+		parser.print_unique(dataset, options);
+	}
 
-	sonify = new Sonify(dataset, true);
-	drawer = new Drawer(dataset, menubar_height, true);
+	sonify = new Sonify();
+	drawer = new Drawer();
 
 	setup_gui();
 	next_timeout = millis();
@@ -50,16 +51,19 @@ void setup_gui() {
 
     cp5.addButton("play_pause", 0, dx, height - menubar_height/2 - h/2, 2 * unit, h);
     cp5.controller("play_pause").captionLabel().setText("pause");
-    dx += 2 * unit + 4 * unit;
+    dx += 2 * unit + 2 * unit;
 
-    cp5.addSlider("status", 1, dataset.length, 1, dx, height - menubar_height/2 - h/2, 60 * unit, h)
+    cp5.addSlider("status", 0, dataset.length-1, 1, dx, height - menubar_height/2 - h/2, 60 * unit, h)
     	.setNumberOfTickMarks(dataset.length)
     	.showTickMarks(false);
     cp5.controller("status").getValueLabel().setText("");
-    dx += 60 * unit + 6 * unit;
+    dx += 60 * unit + 5 * unit;
 
     cp5.addSlider("speed", 0, 5, 1, dx, height - menubar_height/2 - h/2, 10 * unit, h);
     dx += 10 * unit + 5 * unit;
+
+    cp5.addButton("about", 0, dx, height - menubar_height/2 - h/2, 2 * unit, h);
+    dx += 2 * unit + unit;
 
 	cp5.addButton("exit", 0, dx, height - menubar_height/2 - h/2, 2 * unit, h);
     dx += 2 * unit + 2 * unit;
@@ -88,6 +92,28 @@ void stop(int val) {
 	cp5.controller("status").setValue(0);
 	cp5.controller("status").getValueLabel().setText("");
 	drawer.reset();
+}
+
+void about(int val) {
+	String about_text = "Authors:\n"
+		+ "Dmitrii Cucleschin (Programming)\n"
+		+ "Nikoloz Kapanadze (Programming) \n"
+		+ "Zurab Babunashvili (Sounds)\n"
+		+ "Oguz Oral (Sheyleo)\n\n"
+		+ "As a part of our project for the course Let The Data Speak, we were\n"
+		+ "asked to use sonification and visualization techniques to represent a\n"
+		+ "dataset. This project aims at demonstrating worldwide nuclear launches in\n"
+		+ "time period of 1945-1998 (data from SIPRI). Simple interface, distinctive\n"
+		+ "sounds for different counties and visuals should assist in understanding\n"
+		+ "main patterns in nuclear development and raise awareness of the massive\n"
+		+ "footprint we are leaving as the result.\n\n"
+		+ "By the way, this project is proudly open-source. Check it out, tweak it,\n"
+		+ "or do anything else with it (as long as there is a mention of an original):\n"
+		+ "https://github.com/dmitryfd/Zond\n\n"
+		+ "Thanks for trying Zond! Any feedback will be more than welcome! :)"
+	;
+
+	JOptionPane.showMessageDialog(null, about_text, "About", JOptionPane.PLAIN_MESSAGE);
 }
  
 void exit(int val) {
@@ -124,7 +150,7 @@ void draw() {
 		// Set GUI to display finished
 		return;
 	}
-	else if (millis() - next_timeout > dataset[current_index].timeSince * speed_multiplier) {
+	else if (millis() - next_timeout > dataset[current_index].time_since * speed_multiplier) {
 		next_timeout = millis();
 
 		drawer.draw(current_index);
