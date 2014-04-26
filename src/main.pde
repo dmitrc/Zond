@@ -134,7 +134,7 @@ void status(float val) {
 
 void speed(float val) {
 	if (val == 0) {
-		speed_multiplier = 999999;
+		speed_multiplier = 999;
 	}
 	else {
 		speed_multiplier = 1/val;
@@ -147,7 +147,6 @@ void draw() {
 	}
 
 	if (current_index >= dataset.length) {
-		// Set GUI to display finished
 		return;
 	}
 	else if (millis() - next_timeout > dataset[current_index].time_since * speed_multiplier) {
