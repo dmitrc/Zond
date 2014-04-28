@@ -2,9 +2,9 @@ import java.util.*;
 import javax.swing.*;
 import controlP5.*;
 
-int next_timeout;
+int next_timeout = -1;
+int menubar_height = -1;
 int current_index = 0;
-int menubar_height = 50;
 float speed_multiplier = 1.0;
 boolean debug = true;
 boolean is_playing = true;
@@ -12,11 +12,17 @@ boolean is_playing = true;
 Datapoint[] dataset = null;
 Sonify sonify = null;
 Drawer drawer = null;
-ControlP5 cp5;
+ControlP5 cp5 = null;
+
+boolean sketchFullScreen() {
+  return true;
+}
 
 void setup() {
-	size(1440, 900);
+	size(displayWidth, displayHeight, P2D);
 	background(20);
+
+	menubar_height = round(height / 18);
 
 	Parser parser = new Parser();
 	dataset = parser.parse_file("dataset.csv");
@@ -42,8 +48,8 @@ void setup_gui() {
     fill(35);
     rect(0, height-menubar_height, width, menubar_height);
 
-    int unit = Math.round(width / 96);
-    int h = Math.round(menubar_height * 0.6);
+    int unit = round(width / 96);
+    int h = round(menubar_height * 0.6);
     int dx = 2 * unit;
 
     cp5.addButton("stop", 0, dx, height - menubar_height/2 - h/2, 2 * unit, h);
@@ -126,7 +132,7 @@ void exit(int val) {
 }
 
 void status(float val) {
-	int i = Math.round(val);
+	int i = round(val);
 	current_index = i;
 
 	cp5.controller("status").getValueLabel().setText(dataset[i].print());

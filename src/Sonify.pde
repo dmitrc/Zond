@@ -7,6 +7,7 @@ class Sonify {
 	public Sample china = null;
 	public Sample uk = null;
 	public Sample ussr = null;
+	public Sample india = null;
 	public Sample pakistan = null;
 
 	private AudioContext ac = null;
@@ -29,6 +30,7 @@ class Sonify {
 			china = new Sample(sketchPath("") + "../audio/china.wav");	
 			uk = new Sample(sketchPath("") + "../audio/uk.wav");
 			ussr = new Sample(sketchPath("") + "../audio/usa.wav"); // !
+			india = new Sample(sketchPath("") + "../audio/usa.wav"); // !
 			pakistan = new Sample(sketchPath("") + "../audio/usa.wav"); // !			
 		}
 		catch(Exception e){
@@ -70,7 +72,10 @@ class Sonify {
 			else if (dataset[i].country.equals("USSR")){
 				sp = new SamplePlayer(ac, ussr);
 			}
-			else if (dataset[i].country.equals("PAKISTAN")){
+			else if (dataset[i].country.equals("INDIA")){
+				sp = new SamplePlayer(ac, india);
+			}
+			else if (dataset[i].country.equals("PAKIST")){
 				sp = new SamplePlayer(ac, pakistan);
 			}
 		 	else {

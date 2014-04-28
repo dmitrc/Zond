@@ -28,6 +28,7 @@ class Drawer {
   }
 
 	public void draw(int i) {
+		// Default: White
 		int r = 255; 
 		int g = 255;
 		int b = 255;
@@ -74,27 +75,27 @@ class Drawer {
 		int x = round(random(d, width-d));
 		int y = round(random(d, height-menubar_height-d));
 
-    if (!(prevX < 0 || prevY < 0 || prevR < 0 || prevG < 0 || prevB < 0)) {
-      stroke(prevR, prevG, prevB, 255);
-      strokeWeight(1);
+	    if (!(prevX < 0 || prevY < 0 || prevR < 0 || prevG < 0 || prevB < 0)) {
+	    	stroke(prevR, prevG, prevB, 255);
+		    strokeWeight(1);
 
-      line(prevX, prevY, round((prevX+x)/2), round((prevY+y)/2));
+		    line(prevX, prevY, round((prevX+x)/2), round((prevY+y)/2));
 
-      stroke(r, g, b, 255);
-      line(round((prevX+x)/2), round((prevY+y)/2), x, y);
-    }
+		    stroke(r, g, b, 255);
+		    line(round((prevX+x)/2), round((prevY+y)/2), x, y);
+		}
 
-    noStroke();
+	    noStroke();
 		fill(r, g, b, a);
 
 		ellipseMode(RADIUS);
 		ellipse(x,y,d,d);
 
-    prevX = x;
-    prevY = y;
-    prevR = r;
-    prevG = g;
-    prevB = b;
+		prevX = x;
+		prevY = y;
+		prevR = r;
+		prevG = g;
+		prevB = b;
 
 		fill(255);
 	}

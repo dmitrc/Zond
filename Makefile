@@ -26,14 +26,6 @@ run: clean link
 	@echo ""
 	@processing-java --sketch="$(DUMMY_DIR)" --run --output="$(BIN_DIR)"
 
-present: clean link
-	@echo "> Building..."
-	@echo ""
-	@echo "> Application will start shortly..."
-	@echo "? Press Ctrl+C to terminate the execution."
-	@echo ""
-	@processing-java --sketch="$(DUMMY_DIR)" --present --output="$(BIN_DIR)"
-
 export: clean link
 	@echo "> Exporting..."
 	@echo ""
