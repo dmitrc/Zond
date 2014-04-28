@@ -52,35 +52,37 @@ class Sonify {
 	}
 	
 	public void play_sample(int i) {
-		SamplePlayer sp;
+		GranularSamplePlayer sp;
 		OnePoleFilter filter;
 		Gain g;
+		Glide pitchValue;
+		Glide rateValue;
 
 		try { 
 			if (dataset[i].country.equals("CHINA")){
-			 	sp = new SamplePlayer(ac, china);
+			 	sp = new GranularSamplePlayer(ac, china);
 		 	}
 		 	else if (dataset[i].country.equals("UK")){
-				sp = new SamplePlayer(ac, uk);
+				sp = new GranularSamplePlayer(ac, uk);
 			}
 			else if (dataset[i].country.equals("USA")){
-				sp = new SamplePlayer(ac, usa);
+				sp = new GranularSamplePlayer(ac, usa);
 			}
 			else if (dataset[i].country.equals("FRANCE")){
-				sp = new SamplePlayer(ac, france);
+				sp = new GranularSamplePlayer(ac, france);
 			}
 			else if (dataset[i].country.equals("USSR")){
-				sp = new SamplePlayer(ac, ussr);
+				sp = new GranularSamplePlayer(ac, ussr);
 			}
 			else if (dataset[i].country.equals("INDIA")){
-				sp = new SamplePlayer(ac, india);
+				sp = new GranularSamplePlayer(ac, india);
 			}
 			else if (dataset[i].country.equals("PAKIST")){
-				sp = new SamplePlayer(ac, pakistan);
+				sp = new GranularSamplePlayer(ac, pakistan);
 			}
 		 	else {
 		 		println("Sonify: Error! Country \"" + dataset[i].country + "\" isn't identified! Using sample for USA...");
-		 		sp = new SamplePlayer(ac, usa);
+		 		sp = new GranularSamplePlayer(ac, usa);
 		 	}	 	
 		}
 		catch (Exception e) {
@@ -104,6 +106,15 @@ class Sonify {
 			g = new Gain(ac, 1, 1);
 			g.addInput(sp);
 		}
+
+		rateValue = new Glide(ac,1,1);
+		pitchValue = new Glide(ac,1,1);	
+
+		rateValue.setValueImmediately(0.5);
+		pitchValue.setValueImmediately(2);
+
+		sp.setRate(rateValue);
+		sp.setPitch(pitchValue);
 
 		//g=new Gain(ac,1,0.4);
 		//g.addInput(sp);
