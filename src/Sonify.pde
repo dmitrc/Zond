@@ -113,14 +113,14 @@ class Sonify {
 		rateValue = new Glide(ac,1,1);
 		pitchValue = new Glide(ac,1,1);	
 		randomnessValue = new Glide(ac,1,1);
-		grainSizeValue = new Glide(ac,1,1);
-		grainInterval = new Glide(ac,1,1);
+		grainSizeValue = new Glide(ac,100,1);
+		grainInterval = new Glide(ac,10,1);
 
-		rateValue.setValue(1);
-		pitchValue.setValue(1);
-		randomnessValue.setValue(1);
-		grainSizeValue.setValue(50);
-		grainInterval.setValue(10);
+		rateValue.setValueImmediately(1);
+		pitchValue.setValueImmediately(1);
+		randomnessValue.setValueImmediately(1);
+		grainSizeValue.setValueImmediately(100);
+		grainInterval.setValueImmediately(10);
 
 		sp.setRate(rateValue);
 		sp.setPitch(pitchValue);
