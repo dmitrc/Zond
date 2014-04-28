@@ -57,6 +57,9 @@ class Sonify {
 		Gain g;
 		Glide pitchValue;
 		Glide rateValue;
+		Glide randomnessValue;
+		Glide grainSizeValue;
+		Glide grainInterval;
 
 		try { 
 			if (dataset[i].country.equals("CHINA")){
@@ -109,12 +112,21 @@ class Sonify {
 
 		rateValue = new Glide(ac,1,1);
 		pitchValue = new Glide(ac,1,1);	
+		randomnessValue = new Glide(ac,1,1);
+		grainSizeValue = new Glide(ac,1,1);
+		grainInterval = new Glide(ac,1,1);
 
-		rateValue.setValueImmediately(0.5);
-		pitchValue.setValueImmediately(2);
+		rateValue.setValue(1);
+		pitchValue.setValue(1);
+		randomnessValue.setValue(1);
+		grainSizeValue.setValue(50);
+		grainInterval.setValue(10);
 
 		sp.setRate(rateValue);
 		sp.setPitch(pitchValue);
+		sp.setRandomness(randomnessValue);
+		sp.setGrainSize(grainSizeValue);
+		sp.setGrainInterval(grainInterval);
 
 		//g=new Gain(ac,1,0.4);
 		//g.addInput(sp);
