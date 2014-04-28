@@ -13,13 +13,26 @@ Datapoint[] dataset = null;
 Sonify sonify = null;
 Drawer drawer = null;
 ControlP5 cp5 = null;
+String os = System.getProperty("os.name");
 
 boolean sketchFullScreen() {
-  return true;
+	if (os.equals("Linux")) {
+		// Full-screen mode not really supported :(
+		return false;
+	}
+	else {
+		return true;
+	}
 }
 
 void setup() {
-	size(displayWidth, displayHeight, P2D);
+	if (os.equals("Linux")) {
+		size(displayWidth - 100, displayHeight - 100, P2D);
+	}
+	else {
+		size(displayWidth, displayHeight, P2D);
+	}
+
 	background(20);
 
 	menubar_height = round(height / 18);
