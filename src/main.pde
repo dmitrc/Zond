@@ -148,6 +148,8 @@ void speed(float val) {
 }
 
 void draw() {
+	drawer.update_objects();
+
 	if (!is_playing) {
 		return;
 	}

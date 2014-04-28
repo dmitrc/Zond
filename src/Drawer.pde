@@ -1,102 +1,113 @@
-class Drawer {
-  
-  private int prevX = -1;
-  private int prevY = -1;
-  private int prevR = -1;
-  private int prevG = -1;
-  private int prevB = -1;
+class Bomb {
+	public int r = 255;
+	public int g = 255;
+	public int b = 255;
 
+	public int x = round(random(0, width));
+	public int y = round(random(0, height));
+
+	public float lifespan = 255.0;
+	public int radius = 50;
+
+	Bomb() {}
+
+	Bomb(int _r, int _g, int _b, int _x, int _y, int _radius) {
+		r = _r;
+		g = _g;
+		b = _b;	
+		x = _x;
+		y = _y;
+		radius = _radius;
+	}
+
+	public void draw() {
+		fill(r, g, b, lifespan);
+		noStroke();
+		ellipseMode(RADIUS);
+
+		ellipse(x, y, radius, radius);
+	}
+
+	public void decay() {
+		lifespan -= 5.0;
+		radius += 5.0;
+	}
+
+	public boolean alive() {
+		if (lifespan < 0.0) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+};
+
+class Drawer {
+
+	private ArrayList<Bomb> objects;
 
 	Drawer() {
 		init();
 	}
 
 	public void init() {
-		PFont f = createFont("Arial",14,true);
-		textFont(f,14);
+		objects = new ArrayList<Bomb>();
 	}
 
-  public void reset() {
-    prevX = -1;
-    prevY = -1;
-    prevR = -1;
-    prevG = -1;
-    prevB = -1;
-
-    fill(20);
-    rect(0, 0, width, height - menubar_height);
-  }
+	public void reset() {
+	 	fill(20);
+	 	rect(0, 0, width, height - menubar_height);
+	}
 
 	public void draw(int i) {
-		// Default: White
-		int r = 255; 
-		int g = 255;
-		int b = 255;
+		int r, g, b;
 
 		if (dataset[i].country.equals("FRANCE")) {
-			r = 27;
-			g = 161;
-			b = 147;
+			r = 27; g = 161; b = 147;
 		}
 		else if (dataset[i].country.equals("USA")) {
-			r = 27;
-			g = 63;
-			b = 161;
+			r = 27; g = 63; b = 161;
 		}
 		else if (dataset[i].country.equals("CHINA")) {
-			r = 232;
-			g = 116;
-			b = 191;
+			r = 232; g = 116; b = 191;
 		}
 		else if (dataset[i].country.equals("UK")) {
-			r = 15;
-			g = 110;
-			b = 34;
+			r = 15; g = 110; b = 34;
 		}
 		else if (dataset[i].country.equals("INDIA")) {
-			r = 115;
-			g = 76;
-			b = 10;
+			r = 115; g = 76; b = 10;
 		}
 		else if (dataset[i].country.equals("PAKIST")) {
-			r = 57;
-			g = 10;
-			b = 115;
+			r = 57; g = 10; b = 115;
 		}
 		else if (dataset[i].country.equals("USSR")) {
-			r = 171;
-			g = 34;
-			b = 34;
+			r = 171; g = 34; b = 34;
+		}
+		else {
+			println("Drawer: Error! Country \"" + dataset[i].country + "\" isn't identified! Using white color...");
+			r = 255; g = 255; b = 255;
 		}
 
-		int d = 10;
-		int a = 255;
+		int radius = 50;
+		int x = round(random(radius, width-radius));
+		int y = round(random(radius, height-menubar_height-radius));
 
-		int x = round(random(d, width-d));
-		int y = round(random(d, height-menubar_height-d));
+		Bomb obj = new Bomb(r, g, b, x, y, radius);
+		objects.add(obj);			    
+	}
 
-	    if (!(prevX < 0 || prevY < 0 || prevR < 0 || prevG < 0 || prevB < 0)) {
-	    	stroke(prevR, prevG, prevB, 255);
-		    strokeWeight(1);
+	public void update_objects() {
+		reset();
 
-		    line(prevX, prevY, round((prevX+x)/2), round((prevY+y)/2));
+		for (int i = 0; i < objects.size(); i++) {
+			Bomb obj = objects.get(i);
+			obj.draw();
+			obj.decay();
 
-		    stroke(r, g, b, 255);
-		    line(round((prevX+x)/2), round((prevY+y)/2), x, y);
+			if (!obj.alive()) {
+				objects.remove(i);
+			}
 		}
-
-	    noStroke();
-		fill(r, g, b, a);
-
-		ellipseMode(RADIUS);
-		ellipse(x,y,d,d);
-
-		prevX = x;
-		prevY = y;
-		prevR = r;
-		prevG = g;
-		prevB = b;
-
-		fill(255);
 	}
 };
