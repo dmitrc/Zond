@@ -22,15 +22,13 @@ class Bomb {
 
 	public void draw() {
 		fill(r, g, b, lifespan);
-		noStroke();
-		ellipseMode(RADIUS);
-
+		stroke(255, 255, 255, lifespan);
 		ellipse(x, y, radius, radius);
 	}
 
 	public void decay() {
-		lifespan -= 5.0;
-		radius += 5.0;
+		lifespan -= 10.0;
+		radius += 3.0;
 	}
 
 	public boolean alive() {
@@ -56,8 +54,13 @@ class Drawer {
 	}
 
 	public void reset() {
+		noStroke();
+		
 	 	fill(20);
 	 	rect(0, 0, width, height - menubar_height);
+
+	 	fill(35);
+    	rect(0, height-menubar_height, width, menubar_height);
 	}
 
 	public void draw(int i) {
@@ -89,7 +92,7 @@ class Drawer {
 			r = 255; g = 255; b = 255;
 		}
 
-		int radius = 50;
+		int radius = round(random(20,70));
 		int x = round(random(radius, width-radius));
 		int y = round(random(radius, height-menubar_height-radius));
 
@@ -99,6 +102,7 @@ class Drawer {
 
 	public void update_objects() {
 		reset();
+		ellipseMode(RADIUS);
 
 		for (int i = 0; i < objects.size(); i++) {
 			Bomb obj = objects.get(i);
