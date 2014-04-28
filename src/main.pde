@@ -3,7 +3,7 @@ import javax.swing.*;
 import controlP5.*;
 
 int next_timeout = -1;
-int draw_timeout = -1;
+int fade_timeout = -1;
 int menubar_height = -1;
 int current_index = 0;
 float speed_multiplier = 1.0;
@@ -54,7 +54,7 @@ void setup() {
 
 	setup_gui();
 	next_timeout = millis();
-	draw_timeout = millis();
+	fade_timeout = millis();
 }
 
 void setup_gui() {
@@ -163,23 +163,21 @@ void speed(float val) {
 }
 
 void draw() {
-	if (millis() - draw_timeout > 20) {
-		drawer.update_objects();
-		draw_timeout = millis();
+	if (is_playing && current_index < dataset.length) {
+		if (millis() - next_timeout > dataset[current_index].time_since * speed_multiplier) {
+			next_timeout = millis();
+
+			drawer.draw(current_index);
+			sonify.play(current_index);
+
+			cp5.controller("status").setValue(current_index);
+			cp5.controller("status").getValueLabel().setText(dataset[current_index].print());
+
+			current_index++;
+		}
 	}
 
-	if (!is_playing || current_index >= dataset.length) {
-		return;
-	}
-	else if (millis() - next_timeout > dataset[current_index].time_since * speed_multiplier) {
-		next_timeout = millis();
-
-		drawer.draw(current_index);
-		sonify.play(current_index);
-
-		cp5.controller("status").setValue(current_index);
-		cp5.controller("status").getValueLabel().setText(dataset[current_index].print());
-
-		current_index++;
+	if (millis() - fade_timeout > 20) {
+		drawer.fade();
 	}
 }
