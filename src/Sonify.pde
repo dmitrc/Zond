@@ -40,30 +40,7 @@ class Sonify {
 		}
 	}
 
-	// Set all the filter settings
-	
-
-	// Method to produce a note at this point of dataset
-	public void play(int i) {
-		update(i);		
-		play_sample(i);
-	}
-
 	public void update(int i) {
-
-	}
-
-	public void setVolume(int i){
-		Glide volume = new Glide(ac,g.getGain(),100);
-		g.setGain(volume);
-		volume.setValue(i);
-	}
-	
-	public float getVolume(){
-		return g.getGain();
-	}
-	
-	public void play_sample(int i) {
 		GranularSamplePlayer sp;
 		OnePoleFilter filter;
 		Glide pitchValue;
@@ -134,6 +111,21 @@ class Sonify {
 
 		sp.setKillOnEnd(true);
 		comp.addInput(g);
+
+	}
+
+	public void setVolume(int i){
+		Glide volume = new Glide(ac,g.getGain(),100);
+		g.setGain(volume);
+		volume.setValue(i);
+	}
+	
+	public float getVolume(){
+		return Math.round(g.getGain());
+	}
+
+	public void play(int i) {
+		update(i);
 		ac.start();
 	}
 };
