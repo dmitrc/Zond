@@ -1,32 +1,36 @@
 class View {
-	public int decay_rate = 8;
-	//public int growth_rate = 
 
-	public int r = 255;
-	public int g = 255;
-	public int b = 255;
+	public int decay_rate = 8;
+
+	public Color c = null;
+	public int shape = round(random(100));
 
 	public int x = round(random(width));
 	public int y = round(random(height));
 
-	public int shape = round(random(100));
-
 	public float lifespan = 255.0;
 	public int radius = 50;
 
-	View() {}
+	View() {
+		c = new Color(255, 255, 255);
+	}
 
-	View(int _r, int _g, int _b, int _x, int _y, int _radius) {
-		r = _r;
-		g = _g;
-		b = _b;	
+	View(Color _c, int _x, int _y, int _radius) {
+
+		if (_c == null) {
+			c = new Color(255, 255, 255);
+		}
+		else {
+			c = _c;	
+		}
+
 		x = _x;
 		y = _y;
 		radius = _radius;
 	}
 
 	public void draw(PGraphics frame) {
-		frame.fill(r, g, b, lifespan);
+		frame.fill(c.getRed(), c.getGreen(), c.getBlue(), lifespan);
 		frame.stroke(255, 255, 255, lifespan);
 
 		if (shape < 60) { // 60% chance of ellipse
@@ -58,6 +62,7 @@ class View {
 class Drawer {
 
 	private ArrayList<View> objects;
+	public HashMap<String,Color> colors;
 
 	Drawer() {
 		init();
@@ -65,6 +70,16 @@ class Drawer {
 
 	public void init() {
 		objects = new ArrayList<View>();
+		colors = new HashMap<String,Color>();
+
+		// Default colors
+		colors.put("FRANCE", new Color(27, 161, 147));
+		colors.put("USA", new Color(27, 63, 161));
+		colors.put("CHINA", new Color(232, 116, 191));
+		colors.put("UK", new Color(15, 110, 34));
+		colors.put("INDIA", new Color(115, 76, 10));
+		colors.put("PAKIST", new Color(57, 10, 115));
+		colors.put("USSR", new Color(171, 34, 34));
 	}
 
 	public void reset() {
@@ -78,39 +93,19 @@ class Drawer {
 	}
 
 	public void draw(int i) {
-		int r, g, b;
+		
+		Color c = colors.get(dataset[i].country);
 
-		if (dataset[i].country.equals("FRANCE")) {
-			r = 27; g = 161; b = 147;
-		}
-		else if (dataset[i].country.equals("USA")) {
-			r = 27; g = 63; b = 161;
-		}
-		else if (dataset[i].country.equals("CHINA")) {
-			r = 232; g = 116; b = 191;
-		}
-		else if (dataset[i].country.equals("UK")) {
-			r = 15; g = 110; b = 34;
-		}
-		else if (dataset[i].country.equals("INDIA")) {
-			r = 115; g = 76; b = 10;
-		}
-		else if (dataset[i].country.equals("PAKIST")) {
-			r = 57; g = 10; b = 115;
-		}
-		else if (dataset[i].country.equals("USSR")) {
-			r = 171; g = 34; b = 34;
-		}
-		else {
-			println("Drawer: Error! Country \"" + dataset[i].country + "\" isn't identified! Using white color...");
-			r = 255; g = 255; b = 255;
+		if (c == null)
+		{
+			println("Drawer: Error! Country \"" + dataset[i].country + "\" isn't identified! Using white c...");
 		}
 
 		int radius = round(random(20,70));
 		int x = round(random(radius, width-radius));
 		int y = round(random(radius, height-menubar_height-radius));
 
-		View obj = new View(r, g, b, x, y, radius);
+		View obj = new View(c, x, y, radius);
 		objects.add(obj);			    
 	}
 

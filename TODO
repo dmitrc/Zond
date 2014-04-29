@@ -1,0 +1,3 @@
+* main.pde / setup_gui() : Implement font resizing based on the screen size.
+* Sonify.pde / update() : Implement.
+* Record final samples.
