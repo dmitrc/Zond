@@ -13,6 +13,8 @@ class Sonify {
 	private AudioContext ac = null;
 	private Compressor comp = null;
 
+	Gain g;
+
 	Sonify() {
 		init();
 	}
@@ -21,9 +23,9 @@ class Sonify {
 		try {
 			ac = new AudioContext();
 			comp = new Compressor(ac);
-
 			comp.setThreshold(0.3f);
 			ac.out.addInput(comp);
+			g=new Gain(ac,1,1);
 
 			france = new Sample(sketchPath("") + "../audio/france.wav");
 			usa = new Sample(sketchPath("") + "../audio/usa.wav");
@@ -50,11 +52,20 @@ class Sonify {
 	public void update(int i) {
 
 	}
+
+	public void setVolume(int i){
+		Glide volume = new Glide(ac,g.getGain(),100);
+		g.setGain(volume);
+		volume.setValue(i);
+	}
+	
+	public float getVolume(){
+		return g.getGain();
+	}
 	
 	public void play_sample(int i) {
 		GranularSamplePlayer sp;
 		OnePoleFilter filter;
-		Gain g;
 		Glide pitchValue;
 		Glide rateValue;
 		Glide randomnessValue;
@@ -95,18 +106,11 @@ class Sonify {
 
 		if (dataset[i].depth > 0){
 			float ratio = (float) Math.log(6/dataset[i].depth);
-
-			println("ratio = " + ratio);
-
 			filter = new OnePoleFilter(ac,3100*ratio);
 			filter.addInput(sp);
-
-			println(filter.getFrequency());
-			g = new Gain(ac, 1, 1);
 			g.addInput(filter);
 		}
 		else {
-			g = new Gain(ac, 1, 1);
 			g.addInput(sp);
 		}
 
@@ -128,12 +132,8 @@ class Sonify {
 		sp.setGrainSize(grainSizeValue);
 		sp.setGrainInterval(grainInterval);
 
-		//g=new Gain(ac,1,0.4);
-		//g.addInput(sp);
 		sp.setKillOnEnd(true);
-		//g.addInput(sp);
 		comp.addInput(g);
-		//ac.out.addInput(g);
 		ac.start();
 	}
 };
