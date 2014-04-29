@@ -3,7 +3,7 @@ import javax.swing.*;
 import controlP5.*;
 
 int next_timeout = -1;
-int fade_timeout = -1;
+int draw_timeout = -1;
 int menubar_height = -1;
 int current_index = 0;
 float speed_multiplier = 1.0;
@@ -28,13 +28,18 @@ boolean sketchFullScreen() {
 
 void setup() {
 	if (os.equals("Linux")) {
-		size(displayWidth - 100, displayHeight - 100);
+		// Tweak around these two values to fit with all menus/bars on your screen:
+		int dx = 100;
+		int dy = 100;
+
+		size(displayWidth - dx, displayHeight - dy);
 	}
 	else {
 		size(displayWidth, displayHeight);
 	}
 
 	background(20);
+	frameRate(30);
 
 	menubar_height = round(height / 18);
 
@@ -54,7 +59,7 @@ void setup() {
 
 	setup_gui();
 	next_timeout = millis();
-	fade_timeout = millis();
+	draw_timeout = millis();
 }
 
 void setup_gui() {
@@ -163,6 +168,8 @@ void speed(float val) {
 }
 
 void draw() {
+	drawer.update_objects();
+
 	if (is_playing && current_index < dataset.length) {
 		if (millis() - next_timeout > dataset[current_index].time_since * speed_multiplier) {
 			next_timeout = millis();
@@ -175,9 +182,5 @@ void draw() {
 
 			current_index++;
 		}
-	}
-
-	if (millis() - fade_timeout > 20) {
-		drawer.fade();
 	}
 }
