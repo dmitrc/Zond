@@ -117,11 +117,11 @@ class Sonify {
 	public void setVolume(int i){
 		Glide volume = new Glide(ac,g.getGain(),100);
 		g.setGain(volume);
-		volume.setValue(i);
+		volume.setValue(i/100);
 	}
 	
-	public float getVolume(){
-		return Math.round(g.getGain());
+	public int getVolume(){
+		return 100*round(g.getGain());
 	}
 
 	public void play(int i) {
