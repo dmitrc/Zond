@@ -97,7 +97,7 @@ class Sonify {
 
 	public Sample changeTime(Sample buffer, float mult){
 
-			Sample newBuff = new Sample(round(buffer.getLength()*ceil(mult+1)));
+			Sample newBuff = new Sample(buffer.getLength()*ceil(mult+1));
 
 			int NS = (int) newBuff.msToSamples(100);
 
