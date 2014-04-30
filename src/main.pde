@@ -2,6 +2,7 @@ import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 import controlP5.*;
+import ddf.minim.*;
 
 int next_timeout = -1;
 int menubar_height = -1;
@@ -11,6 +12,7 @@ boolean debug = true;
 boolean is_playing = true;
 
 Datapoint[] dataset = null;
+Minim minim = null;
 Sonify sonify = null;
 Drawer drawer = null;
 ControlP5 cp5 = null;
@@ -32,7 +34,7 @@ void setup() {
 		int dx = 100;
 		int dy = 100;
 
-		size(displayWidth - dx, displayHeight - dy, P2D);
+		size(displayWidth - dx, displayHeight - dy);
 	}
 	else {
 		size(displayWidth, displayHeight, P2D);
@@ -54,6 +56,7 @@ void setup() {
 		parser.print_unique(dataset, options);
 	}
 
+	minim = new Minim(this);
 	sonify = new Sonify();
 	drawer = new Drawer();
 
