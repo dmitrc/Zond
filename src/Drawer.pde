@@ -30,18 +30,18 @@ class View {
 		radius = _radius;
 	}
 
-	public void draw(PGraphics frame) {
-		frame.fill(c.getRed(), c.getGreen(), c.getBlue(), lifespan);
-		frame.stroke(255, 255, 255, lifespan);
+	public void draw() {
+		fill(c.getRed(), c.getGreen(), c.getBlue(), lifespan);
+		stroke(255, 255, 255, lifespan);
 
 		if (shape < 60) { // 60% chance of ellipse
-			frame.ellipse(x, y, radius, radius);
+			ellipse(x, y, radius, radius);
 		}
 		else if (shape < 90) { // 30% chance of square
-			frame.rect(x, y, radius, radius);
+			rect(x, y, radius, radius);
 		}
 		else { // 10% chance of triangle
-			frame.triangle(x-radius, y+radius, x, y-radius, x+radius, y+radius);
+			triangle(x-radius, y+radius, x, y-radius, x+radius, y+radius);
 		}
 	}
 
@@ -88,9 +88,6 @@ class Drawer {
 		
 	 	fill(20);
 	 	rect(0, 0, width, height - menubar_height);
-
-	 	fill(35);
-    	rect(0, height-menubar_height, width, menubar_height);
 	}
 
 	public void draw(int i) {
@@ -112,17 +109,12 @@ class Drawer {
 
 	public void update_objects() {
 		reset();
-		
-		PGraphics frame = createGraphics(width, height-menubar_height);
-		frame.beginDraw();
-
-		frame.background(20);
-		frame.ellipseMode(RADIUS);
-		frame.rectMode(RADIUS);
+		ellipseMode(RADIUS);
+		rectMode(RADIUS);
 
 		for (int i = 0; i < objects.size(); i++) {
 			View obj = objects.get(i);
-			obj.draw(frame);
+			obj.draw();
 		}
 
 		// Decay and remove separately to avoid flickering problems
@@ -135,7 +127,14 @@ class Drawer {
 			}	
 		}
 
-		frame.endDraw();
-		image(frame, 0, 0, width, height-menubar_height);
+		// Draw menu bar
+		draw_menu_bar();
+	}
+
+	public void draw_menu_bar() {
+		noStroke();
+		rectMode(CORNER);
+		fill(35, 35, 35, 150);
+    	rect(0, height-menubar_height, width, menubar_height);
 	}
 };

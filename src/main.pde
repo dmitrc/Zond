@@ -4,7 +4,6 @@ import java.awt.*;
 import controlP5.*;
 
 int next_timeout = -1;
-int draw_timeout = -1;
 int menubar_height = -1;
 int current_index = 0;
 float speed_multiplier = 1.0;
@@ -60,10 +59,10 @@ void setup() {
 
 	setup_gui();
 	next_timeout = millis();
-	draw_timeout = millis();
 }
 
 void setup_gui() {
+	drawer.draw_menu_bar();
  	cp5 = new ControlP5(this);
 
     fill(35);
@@ -94,7 +93,7 @@ void setup_gui() {
 
 	cp5.addButton("exit", 0, dx, height - menubar_height/2 - h/2, 2 * unit, h);
     dx += 2 * unit + 2 * unit;
-
+    
     // Takes care of all 96 "intervals" of the screen. Tested on 1440x900, hopefully will work with different widths...
 }
 
