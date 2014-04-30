@@ -5,15 +5,11 @@ class View {
 
 	public Color c = null;
 
-	public int x = round(random(width));
-	public int y = round(random(height));
+	public int x = 0;
+	public int y = 0;
 
 	public float lifespan = 255.0;
-	public int radius = 50;
-
-	View() {
-		c = new Color(255, 255, 255);
-	}
+	public int radius = 0;
 
 	View(Color _c, int _x, int _y, int _radius) {
 
@@ -30,7 +26,7 @@ class View {
 	}
 
 	public void draw() {
-		fill(c.getRed() + random(0,5), c.getGreen() + random(0,5), c.getBlue() + random(0,5), lifespan);
+		fill(c.getRed(), c.getGreen(), c.getBlue(), lifespan);
 		stroke(255, 255, 255, lifespan);
 		ellipse(x, y, radius, radius);
 	}
@@ -86,14 +82,18 @@ class Drawer {
 
 		if (c == null)
 		{
-			println("Drawer: Error! Country \"" + dataset[i].country + "\" isn't identified! Using white color...");
+			println("Drawer: Error! Country \"" + dataset[i].country + "\" isn't identified! Using white c...");
 		}
 
 		int yield_u = round(min(dataset[i].yield_u, 1500));
 		int radius = round(map(yield_u, 0, 1500, 25, 100));
 
-		int x = round(map(dataset[i].lon, -169, 179, 0, width));
-		int y = round(map(dataset[i].lat, -50, 75, 0, height-menubar_height));
+		// (!) Uncomment for georgaphical coordinates positioning. Boring though :(
+		//int x = round(map(dataset[i].lon, -169, 179, 0, width));
+		//int y = round(map(dataset[i].lat, -50, 75, 0, height-menubar_height));
+		
+		int x = round(random(radius,width-radius));
+		int y = round(random(radius,height-menubar_height-radius));
 
 		View obj = new View(c, x, y, radius);
 		objects.add(obj);			    
