@@ -40,7 +40,7 @@ void setup() {
 	}
 
 	background(20);
-	frameRate(30);
+	frameRate(24);
 
 	menubar_height = round(height / 18);
 
@@ -178,7 +178,6 @@ void draw() {
 
 			drawer.draw(current_index);
 			sonify.play(current_index);
-			sonify.setVolume(0); // !
 
 			cp5.controller("status").setValue(current_index);
 			cp5.controller("status").getValueLabel().setText(dataset[current_index].print());

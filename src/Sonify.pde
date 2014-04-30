@@ -41,39 +41,34 @@ class Sonify {
 	}
 
 	public void update(int i) {
-		GranularSamplePlayer sp;
+		SamplePlayer sp;
 		OnePoleFilter filter;
-		Glide pitchValue;
-		Glide rateValue;
-		Glide randomnessValue;
-		Glide grainSizeValue;
-		Glide grainInterval;
-
+		
 		try { 
 			if (dataset[i].country.equals("CHINA")){
-			 	sp = new GranularSamplePlayer(ac, china);
+			 	sp = new SamplePlayer(ac, china);
 		 	}
 		 	else if (dataset[i].country.equals("UK")){
-				sp = new GranularSamplePlayer(ac, uk);
+				sp = new SamplePlayer(ac, uk);
 			}
 			else if (dataset[i].country.equals("USA")){
-				sp = new GranularSamplePlayer(ac, usa);
+				sp = new SamplePlayer(ac, usa);
 			}
 			else if (dataset[i].country.equals("FRANCE")){
-				sp = new GranularSamplePlayer(ac, france);
+				sp = new SamplePlayer(ac, france);
 			}
 			else if (dataset[i].country.equals("USSR")){
-				sp = new GranularSamplePlayer(ac, ussr);
+				sp = new SamplePlayer(ac, ussr);
 			}
 			else if (dataset[i].country.equals("INDIA")){
-				sp = new GranularSamplePlayer(ac, india);
+				sp = new SamplePlayer(ac, india);
 			}
 			else if (dataset[i].country.equals("PAKIST")){
-				sp = new GranularSamplePlayer(ac, pakistan);
+				sp = new SamplePlayer(ac, pakistan);
 			}
 		 	else {
 		 		println("Sonify: Error! Country \"" + dataset[i].country + "\" isn't identified! Using sample for USA...");
-		 		sp = new GranularSamplePlayer(ac, usa);
+		 		sp = new SamplePlayer(ac, usa);
 		 	}	 	
 		}
 		catch (Exception e) {
@@ -91,27 +86,31 @@ class Sonify {
 			g.addInput(sp);
 		}
 
-		rateValue = new Glide(ac,1,1);
-		pitchValue = new Glide(ac,1,1);	
-		randomnessValue = new Glide(ac,1,1);
-		grainSizeValue = new Glide(ac,100,1);
-		grainInterval = new Glide(ac,10,1);
+		Sample buff = changeTime(sp.getBuffer(), 1);
 
-		rateValue.setValueImmediately(1);
-		pitchValue.setValueImmediately(1);
-		randomnessValue.setValueImmediately(1);
-		grainSizeValue.setValueImmediately(100);
-		grainInterval.setValueImmediately(10);
-
-		sp.setRate(rateValue);
-		sp.setPitch(pitchValue);
-		sp.setRandomness(randomnessValue);
-		sp.setGrainSize(grainSizeValue);
-		sp.setGrainInterval(grainInterval);
+		sp.setSample(buff);
 
 		sp.setKillOnEnd(true);
 		comp.addInput(g);
 
+	}
+
+	public Sample changeTime(Sample buffer, float mult){
+
+			Sample newBuff = new Sample(buffer.getLength()*ceil(mult+1));
+
+			int NS = (int) newBuff.msToSamples(100);
+
+			float[][] frames = new float[2][NS];
+			
+			for(int j = 0; j<buffer.msToSamples(buffer.getLength())/100; j++){
+			
+				buffer.getFrames(j,frames);
+			
+				newBuff.putFrames(round(j*100/mult),frames);
+		
+		}
+		return newBuff;
 	}
 
 	public void setVolume(int i){
