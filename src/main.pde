@@ -36,7 +36,7 @@ void setup() {
 		size(displayWidth - dx, displayHeight - dy);
 	}
 	else {
-		size(displayWidth, displayHeight, P2D);
+		size(displayWidth, displayHeight);
 	}
 
 	background(20);
