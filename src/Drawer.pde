@@ -1,7 +1,7 @@
 class View {
 
 	public int decay_rate = 5; // subtracted every step
-	public float growth_rate = 0.07; // at every step radius += (radius * growth_rate)
+	public float growth_rate = 0.05; // at every step radius += (radius * growth_rate)
 
 	public Color c = null;
 
@@ -30,7 +30,7 @@ class View {
 	}
 
 	public void draw() {
-		fill(c.getRed(), c.getGreen(), c.getBlue(), lifespan);
+		fill(c.getRed() + random(0,5), c.getGreen() + random(0,5), c.getBlue() + random(0,5), lifespan);
 		stroke(255, 255, 255, lifespan);
 		ellipse(x, y, radius, radius);
 	}
@@ -86,12 +86,14 @@ class Drawer {
 
 		if (c == null)
 		{
-			println("Drawer: Error! Country \"" + dataset[i].country + "\" isn't identified! Using white c...");
+			println("Drawer: Error! Country \"" + dataset[i].country + "\" isn't identified! Using white color...");
 		}
 
-		int radius = round(random(20,70));
-		int x = round(random(radius, width-radius));
-		int y = round(random(radius, height-menubar_height-radius));
+		int yield_u = round(min(dataset[i].yield_u, 1500));
+		int radius = round(map(yield_u, 0, 1500, 25, 100));
+
+		int x = round(map(dataset[i].lon, -169, 179, 0, width));
+		int y = round(map(dataset[i].lat, -50, 75, 0, height-menubar_height));
 
 		View obj = new View(c, x, y, radius);
 		objects.add(obj);			    
