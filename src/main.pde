@@ -176,14 +176,7 @@ void draw() {
 			next_timeout = millis();
 
 			drawer.draw(current_index);
-			
-			// Do sounds on a separate threads to keep animation (fps) smooth
-			Thread thread = new Thread(){
-    			public void run(){
-      				sonify.play(current_index);
-    			}
-  			};
- 			thread.start();
+      		sonify.play(current_index);
 
 			cp5.controller("status").setValue(current_index);
 			cp5.controller("status").getValueLabel().setText(dataset[current_index].print());
