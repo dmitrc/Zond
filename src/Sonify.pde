@@ -101,20 +101,20 @@ class Sonify {
 
 	public Sample changeTime(Sample buffer, float mult){
 
-			int piece = 100;
+		int piece = 50;
 
-			Sample newBuff = new Sample(buffer.getLength()*ceil(mult+1));
+		Sample newBuff = new Sample(buffer.getLength()*ceil(mult+1));
 
-			int NS = (int) newBuff.msToSamples(piece);
+		int NS = (int) newBuff.msToSamples(piece);
 
-			float[][] frames = new float[2][NS];
-			
-			for(int j = 0; j<buffer.msToSamples(buffer.getLength()); j=j+piece){
-			
-				buffer.getFrames(j,frames);
-				
-				newBuff.putFrames(round(j*mult),frames);
+		float[][] frames = new float[2][NS];
 		
+		for(int j = 0; j<buffer.msToSamples(buffer.getLength()); j=j+piece){
+			
+			buffer.getFrames(j,frames);
+			for(int k=0; k<ceil(mult); k++){
+				newBuff.putFrames(round(j*mult)+k*piece,frames);
+			}
 		}
 		return newBuff;
 	}
