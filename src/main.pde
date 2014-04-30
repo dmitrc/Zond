@@ -36,7 +36,7 @@ void setup() {
 		size(displayWidth - dx, displayHeight - dy);
 	}
 	else {
-		size(displayWidth, displayHeight);
+		size(displayWidth, displayHeight, P2D);
 	}
 
 	background(20);
@@ -118,6 +118,7 @@ void stop(int val) {
 	cp5.controller("play_pause").captionLabel().setText("play");
 	cp5.controller("status").setValue(0);
 	cp5.controller("status").getValueLabel().setText("");
+
 	drawer.reset();
 }
 
@@ -169,19 +170,28 @@ void speed(float val) {
 }
 
 void draw() {
-	drawer.update_objects();
-
 	if (is_playing && current_index < dataset.length) {
+		drawer.update_objects();
+
 		if (millis() - next_timeout > dataset[current_index].time_since * speed_multiplier) {
 			next_timeout = millis();
 
 			drawer.draw(current_index);
 			sonify.play(current_index);
+			sonify.setVolume(0); // !
 
 			cp5.controller("status").setValue(current_index);
 			cp5.controller("status").getValueLabel().setText(dataset[current_index].print());
 
 			current_index++;
 		}
+	}
+
+	if (debug) {
+		fill(0);
+		rect(10, 5, 130, 20);
+
+		fill(255);
+  		text("FPS: " + frameRate, 20, 20);
 	}
 }

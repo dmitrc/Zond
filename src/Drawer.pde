@@ -1,6 +1,7 @@
 class View {
 
-	public int decay_rate = 8;
+	public int decay_rate = 8; // subtracted every step
+	public float growth_rate = 0.1; // at every step radius += (radius * growth_rate)
 
 	public Color c = null;
 	public int shape = round(random(100));
@@ -46,7 +47,7 @@ class View {
 
 	public void decay() {
 		lifespan -= decay_rate;
-		radius += round(radius/10);
+		radius += round(radius * growth_rate);
 	}
 
 	public boolean alive() {
@@ -111,7 +112,7 @@ class Drawer {
 
 	public void update_objects() {
 		reset();
-
+		
 		PGraphics frame = createGraphics(width, height-menubar_height);
 		frame.beginDraw();
 
@@ -122,12 +123,14 @@ class Drawer {
 		for (int i = 0; i < objects.size(); i++) {
 			View obj = objects.get(i);
 			obj.draw(frame);
-			obj.decay();
 		}
 
-		// Remove separately to avoid flickering problems
+		// Decay and remove separately to avoid flickering problems
 		for (int i = 0; i < objects.size(); i++) {
-			if (!objects.get(i).alive()) {
+			View obj = objects.get(i);
+			obj.decay();
+
+			if (!obj.alive()) {
 				objects.remove(i);
 			}	
 		}
