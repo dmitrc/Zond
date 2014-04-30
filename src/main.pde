@@ -32,14 +32,14 @@ void setup() {
 		int dx = 100;
 		int dy = 100;
 
-		size(displayWidth - dx, displayHeight - dy);
+		size(displayWidth - dx, displayHeight - dy, P2D);
 	}
 	else {
-		size(displayWidth, displayHeight);
+		size(displayWidth, displayHeight, P2D);
 	}
 
 	background(20);
-	frameRate(24);
+	frameRate(30);
 
 	menubar_height = round(height / 18);
 
@@ -176,7 +176,14 @@ void draw() {
 			next_timeout = millis();
 
 			drawer.draw(current_index);
-			sonify.play(current_index);
+			
+			// Do sounds on a separate threads to keep animation (fps) smooth
+			Thread thread = new Thread(){
+    			public void run(){
+      				sonify.play(current_index);
+    			}
+  			};
+ 			thread.start();
 
 			cp5.controller("status").setValue(current_index);
 			cp5.controller("status").getValueLabel().setText(dataset[current_index].print());

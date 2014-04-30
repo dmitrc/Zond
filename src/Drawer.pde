@@ -1,10 +1,9 @@
 class View {
 
-	public int decay_rate = 8; // subtracted every step
-	public float growth_rate = 0.1; // at every step radius += (radius * growth_rate)
+	public int decay_rate = 5; // subtracted every step
+	public float growth_rate = 0.07; // at every step radius += (radius * growth_rate)
 
 	public Color c = null;
-	public int shape = round(random(100));
 
 	public int x = round(random(width));
 	public int y = round(random(height));
@@ -33,16 +32,7 @@ class View {
 	public void draw() {
 		fill(c.getRed(), c.getGreen(), c.getBlue(), lifespan);
 		stroke(255, 255, 255, lifespan);
-
-		if (shape < 60) { // 60% chance of ellipse
-			ellipse(x, y, radius, radius);
-		}
-		else if (shape < 90) { // 30% chance of square
-			rect(x, y, radius, radius);
-		}
-		else { // 10% chance of triangle
-			triangle(x-radius, y+radius, x, y-radius, x+radius, y+radius);
-		}
+		ellipse(x, y, radius, radius);
 	}
 
 	public void decay() {
