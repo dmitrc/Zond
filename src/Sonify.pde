@@ -86,9 +86,13 @@ class Sonify {
 			g.addInput(sp);
 		}
 
-		Sample buff = changeTime(sp.getBuffer(), 1);
-
+		Sample buff = changeTime(sp.getBuffer(), i%5+1);
 		sp.setSample(buff);
+
+		Glide pitchGlide = new Glide(ac,1,1);
+		sp.setPitch(pitchGlide);
+		pitchGlide.setValueImmediately(i%5+1);
+
 
 		sp.setKillOnEnd(true);
 		comp.addInput(g);
@@ -97,17 +101,19 @@ class Sonify {
 
 	public Sample changeTime(Sample buffer, float mult){
 
+			int piece = 100;
+
 			Sample newBuff = new Sample(buffer.getLength()*ceil(mult+1));
 
-			int NS = (int) newBuff.msToSamples(100);
+			int NS = (int) newBuff.msToSamples(piece);
 
-			float[][] frames = new float[NS][2];
+			float[][] frames = new float[2][NS];
 			
-			for(int j = 0; j<buffer.msToSamples(buffer.getLength())/100; j++){
+			for(int j = 0; j<buffer.msToSamples(buffer.getLength()); j=j+piece){
 			
 				buffer.getFrames(j,frames);
-			
-				newBuff.putFrames(round(j*100/mult),frames);
+				
+				newBuff.putFrames(round(j*mult),frames);
 		
 		}
 		return newBuff;
