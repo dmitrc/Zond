@@ -10,6 +10,7 @@ int current_index = 0;
 float speed_multiplier = 1.0;
 boolean debug = true;
 boolean is_playing = false;
+int max_samples = 60;
 
 Datapoint[] dataset = null;
 Minim minim = null;
@@ -169,6 +170,9 @@ void speed(float val) {
 	}
 	else {
 		speed_multiplier = 1/val;
+	}
+	if(val>1){
+		max_samples=round(60/val);
 	}
 }
 

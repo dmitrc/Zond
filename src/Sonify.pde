@@ -13,8 +13,6 @@ class Sonify {
 
 	AudioOutput out;
 
-	int sampleCount = 50;
-
 	public MultiChannelBuffer[] FRANCE = new MultiChannelBuffer[5];
 	public MultiChannelBuffer[] USA = new MultiChannelBuffer[5];
 	public MultiChannelBuffer[] CHINA = new MultiChannelBuffer[5];
@@ -145,14 +143,14 @@ class Sonify {
 	public BitCrush pickBit(int i){
 		float bits = log((dataset[i].yield_u+0.0001)/50000);
 
-		bits = round(map(bits, -21, 0, 16, 4));
+		bits = round(map(bits, -21, 0, 14, 5));
 		BitCrush crusher = new BitCrush(bits, 44100);
 		println(bits +" - " + dataset[i].yield_u);
 		return crusher;		
 	}
 
 	public void updateSamples(){
-		if (samples.size() > sampleCount && !samples.isEmpty()){			
+		while (!samples.isEmpty() && samples.size() >= max_samples){			
 			samples.get(0).dispose();
 			samples.remove(0);
 		}
@@ -178,14 +176,5 @@ class Sonify {
 		Chain chain = new Chain(sample, pan, amplitude, crusher);
 		samples.add(chain);
 		chain.play();
-	}
-
-	public void setVolume(int i){
-		out.setVolume(i);
-	
-	}
-	
-	public float getVolume(){
-		return out.getVolume();
 	}
 };
