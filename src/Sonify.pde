@@ -9,6 +9,7 @@ class Sonify {
 
 	Map<String, MultiChannelBuffer[]> map;
 	Map<String, Integer> octaves;
+	Map<String, Float> volumes;
 
 	AudioOutput out;
 
@@ -25,19 +26,29 @@ class Sonify {
 	MultiChannelBuffer buff;
 	MultiChannelBuffer[] buffs;
 
+	Flanger flanger;
+	Summer summer;
+
 	private class Chain {
 		Sampler sampler;
 		Pan pan;
+		Constant amplitude;
+		BitCrush crusher;
 
-		Chain(Sampler inputSampler, Pan inputPan){
+		Chain(Sampler inputSampler, Pan inputPan, Constant inputAmplitude, BitCrush inputCrusher){
 			sampler = inputSampler;
 			pan = inputPan;
-			sampler.patch(pan);
+			amplitude = inputAmplitude;
+			crusher = inputCrusher;
+			sampler.patch(crusher);
+			amplitude.patch(sampler.amplitude);
+			crusher.patch(pan);
 			pan.patch(out);
 		}
 
 		public void dispose(){
-			sampler.unpatch(pan);
+			sampler.unpatch(crusher);
+			crusher.unpatch(pan);
 			pan.unpatch(out);
 		}
 
@@ -53,6 +64,7 @@ class Sonify {
 
 		map = new HashMap<String, MultiChannelBuffer[]>();
 		octaves = new HashMap<String, Integer>();
+		volumes = new HashMap<String, Float>();
 
 		init();			
 	}
@@ -75,6 +87,17 @@ class Sonify {
 		octaves.put("PNE",1);
 		octaves.put("SAM",0);
 		octaves.put("SE",0);
+
+		volumes.put("UW",0.30);
+		volumes.put("SHAFT",0.37);
+		volumes.put("CRATER",0.44);
+		volumes.put("WATERSURFACE",0.51);
+		volumes.put("SURFACE",0.58);
+		volumes.put("BARGE",0.65);
+		volumes.put("TOWER",0.82);
+		volumes.put("BALOON",0.89);
+		volumes.put("AIRDROP",0.95);
+		volumes.put("ROCKET",1.0);
 
 		try {
 			for(int i = 0; i < 5; i++){
@@ -116,7 +139,6 @@ class Sonify {
 
 	public float pickPan(int i){
 		float pan = - map(dataset[i].lon, -169, 179, -1, 1);
-		println(pan);
 		return pan;	
 	}
 
@@ -124,10 +146,26 @@ class Sonify {
 
 	}
 
+	public BitCrush pickBit(int i){
+		int bits = 16;
+		bits = round(map(dataset[i].yield_u, 0, 50000, 6, 16));
+		BitCrush crusher = new BitCrush(bits, 44100);
+		return crusher;		
+	}
+
 	public void updateSamples(){
-		if (samples.size() > sampleCount){
+		if (samples.size() > sampleCount && !samples.isEmpty()){			
 			samples.get(0).dispose();
 			samples.remove(0);
+		}
+	}
+
+	public float pickVolume(int i){
+		if(volumes.containsKey(dataset[i].type)){
+			return volumes.get(dataset[i].type);
+		}
+		else{
+			return 0.75;
 		}
 	}
 
@@ -137,19 +175,19 @@ class Sonify {
 		buff = pickOctave(buffs, i);
 		Pan pan = new Pan(pickPan(i));
 		Sampler sample = new Sampler(buff, 44100, 1);
-		//sample.patch(pan);
-		//pan.patch(out);
-		Chain chain = new Chain(sample,pan);
+		Constant amplitude = new Constant(pickVolume(i));
+		BitCrush crusher = pickBit(i);
+		Chain chain = new Chain(sample, pan, amplitude, crusher);
 		samples.add(chain);
 		chain.play();
 	}
 
-
 	public void setVolume(int i){
+		out.setVolume(i);
 	
 	}
 	
-	public int getVolume(){
-		return 1;
+	public float getVolume(){
+		return out.getVolume();
 	}
 };
