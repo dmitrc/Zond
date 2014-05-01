@@ -20,7 +20,9 @@ class Sonify {
 	public Sampler[] INDIA = new Sampler[5];
 	public Sampler[] PAKIST = new Sampler[5];
 
-	int voices=25;
+	public Pan[] pannerList = new Pan[37];
+
+	int voices=1000;
 
 	float xCenter=0;
 	float yCenter=0;
@@ -31,9 +33,7 @@ class Sonify {
 		map = new HashMap<String, Sampler[]>();
 		octaves = new HashMap<String, Integer>();
 
-		init();
-
-			
+		init();			
 	}
 
 	public void init(){
@@ -68,7 +68,13 @@ class Sonify {
 		}
 		catch(Exception e){
 			println("Sonify: Error! Can't open one of the sample files!");
-		}		
+		}	
+
+		for(int i=0; i<37; i++){
+			float panValue=-(1.0/18.0)*(18.0-i);
+			pannerList[i]=new Pan(panValue);
+			pannerList[i].patch(out);
+		}
 	}
 
 	public Sampler[] pickCountry(int i){
@@ -83,11 +89,11 @@ class Sonify {
 	}
 
 	public void pickPan(Sampler sampler, int i){
-		Pan pan = new Pan(0);
-		float panValue=((2)*(dataset[i].lat+180))/(360)-1;
-		pan.setPan(panValue);
-		sampler.patch(pan);
-		pan.patch(out);
+		int panValue=round(dataset[i].lon+180)/10;
+		for(int j=0; j<37; j++){
+					sampler.unpatch(pannerList[j]);
+		}
+		sampler.patch(pannerList[panValue]);
 	}
 
 	public Sampler pickOctave(Sampler[] country, int i){
