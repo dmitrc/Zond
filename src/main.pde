@@ -4,8 +4,8 @@ import java.awt.*;
 import controlP5.*;
 import ddf.minim.*;
 
-int next_timeout = -1;
-int menubar_height = -1;
+int next_timeout = 0;
+int menubar_height = 0;
 int current_index = 0;
 float speed_multiplier = 1.0;
 boolean debug = true;
@@ -84,7 +84,8 @@ void setup_gui() {
 
     cp5.addSlider("status", 0, dataset.length-1, 1, dx, height - menubar_height/2 - h/2, 60 * unit, h)
     	.setNumberOfTickMarks(dataset.length)
-    	.showTickMarks(false);
+    	.showTickMarks(false)
+    	.setValue(0);
     cp5.controller("status").getValueLabel().setText("");
     dx += 60 * unit + 5 * unit;
 
@@ -172,19 +173,22 @@ void speed(float val) {
 }
 
 void draw() {
-	if (is_playing && current_index < dataset.length) {
+	if (is_playing) {
 		drawer.update_objects();
 
-		if (millis() - next_timeout > dataset[current_index].time_since * speed_multiplier) {
-			next_timeout = millis();
+		if (current_index < dataset.length) {
+			if (millis() - next_timeout > dataset[current_index].time_since * speed_multiplier) {
+				next_timeout = millis();
 
-			drawer.draw(current_index);
-      		sonify.play(current_index);
+				println("Index: " + current_index);
+				drawer.draw(current_index);
+	      		sonify.play(current_index);
 
-			cp5.controller("status").setValue(current_index);
-			cp5.controller("status").getValueLabel().setText(dataset[current_index].print());
+				cp5.controller("status").setValue(current_index);
+				cp5.controller("status").getValueLabel().setText(dataset[current_index].print());
 
-			current_index++;
+				current_index++;
+			}
 		}
 	}
 

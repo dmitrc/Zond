@@ -70,6 +70,11 @@ class Drawer {
 	}
 
 	public void reset() {
+		objects.clear();
+		clear();
+	}
+
+	public void clear() {
 		noStroke();
 		
 	 	fill(20);
@@ -100,7 +105,7 @@ class Drawer {
 	}
 
 	public void update_objects() {
-		reset();
+		clear();
 		ellipseMode(RADIUS);
 		rectMode(RADIUS);
 
