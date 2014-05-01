@@ -21,7 +21,6 @@ class Sonify {
 	public Sampler[] PAKIST = new Sampler[5];
 
 	public Pan[] pannerList = new Pan[37];
-
 	public Summer[] panSummerList = new Summer[37];
 
 	Sampler sampler;
@@ -95,7 +94,7 @@ class Sonify {
 			return map.get("USA");
 		}	
 	}
-	
+
 	public Sampler pickOctave(Sampler[] country, int i){
 		if(octaves.containsKey(dataset[i].purpose)){
 			return country[octaves.get(dataset[i].purpose)];
@@ -107,7 +106,7 @@ class Sonify {
 	}
 
 	public Summer pickPan(Sampler sampler, int i){
-		int panValue = round(dataset[i].lon / 10 + 18);
+		int panValue = round(dataset[i].lon / 10.0 ) + 18;
 		println(panValue);
 		return panSummerList[panValue];	
 	}
@@ -119,9 +118,8 @@ class Sonify {
 	public void play(int i) {
 		samplers = pickCountry(i);
 		sampler = pickOctave(samplers, i);
-		//summer = pickPan(sampler, i);
-		//sampler.patch(summer);
-		sampler.patch(out);
+		summer = pickPan(sampler, i);
+		sampler.patch(summer);
 		sampler.trigger();
 	}
 
