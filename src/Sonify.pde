@@ -142,14 +142,12 @@ class Sonify {
 		return pan;	
 	}
 
-	public void pickFilter(){
-
-	}
-
 	public BitCrush pickBit(int i){
-		int bits = 16;
-		bits = round(map(dataset[i].yield_u, 0, 50000, 6, 16));
+		float bits = log((dataset[i].yield_u+0.0001)/50000);
+
+		bits = round(map(bits, -21, 0, 16, 4));
 		BitCrush crusher = new BitCrush(bits, 44100);
+		println(bits +" - " + dataset[i].yield_u);
 		return crusher;		
 	}
 
