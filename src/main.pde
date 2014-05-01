@@ -9,7 +9,7 @@ int menubar_height = 0;
 int current_index = 0;
 float speed_multiplier = 1.0;
 boolean debug = true;
-boolean is_playing = true;
+boolean is_playing = false;
 
 Datapoint[] dataset = null;
 Minim minim = null;
@@ -79,7 +79,7 @@ void setup_gui() {
     dx += 2 * unit + unit;
 
     cp5.addButton("play_pause", 0, dx, height - menubar_height/2 - h/2, 2 * unit, h);
-    cp5.controller("play_pause").captionLabel().setText("pause");
+    cp5.controller("play_pause").captionLabel().setText("play");
     dx += 2 * unit + 2 * unit;
 
     cp5.addSlider("status", 0, dataset.length-1, 1, dx, height - menubar_height/2 - h/2, 60 * unit, h)
