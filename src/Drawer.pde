@@ -89,11 +89,11 @@ class Drawer {
 		int radius = round(map(yield_u, 0, 1500, 25, 100));
 
 		// (!) Uncomment for georgaphical coordinates positioning. Boring though :(
-		//int x = round(map(dataset[i].lon, -169, 179, 0, width));
-		//int y = round(map(dataset[i].lat, -50, 75, 0, height-menubar_height));
+		int x = round(map(dataset[i].lon, -169, 179, 0, width));
+		int y = round(map(dataset[i].lat, -50, 75, 0, height-menubar_height));
 		
-		int x = round(random(radius,width-radius));
-		int y = round(random(radius,height-menubar_height-radius));
+		//int x = round(random(radius,width-radius));
+		//int y = round(random(radius,height-menubar_height-radius));
 
 		View obj = new View(c, x, y, radius);
 		objects.add(obj);			    
