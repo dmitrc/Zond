@@ -21,12 +21,6 @@ class Sonify {
 	public MultiChannelBuffer[] INDIA = new MultiChannelBuffer[5];
 	public MultiChannelBuffer[] PAKIST = new MultiChannelBuffer[5];
 
-	MultiChannelBuffer buff;
-	MultiChannelBuffer[] buffs;
-
-	Flanger flanger;
-	Summer summer;
-
 	private class Chain {
 		Sampler sampler;
 		Pan pan;
@@ -55,15 +49,13 @@ class Sonify {
 		}
 	}
 
-	ArrayList<Chain> samples = new ArrayList<Chain>();
+	LinkedList<Chain> samples = new LinkedList<Chain>();
 
 	Sonify() {
 		out = minim.getLineOut();
-
 		map = new HashMap<String, MultiChannelBuffer[]>();
 		octaves = new HashMap<String, Integer>();
 		volumes = new HashMap<String, Float>();
-
 		init();			
 	}
 
@@ -99,14 +91,32 @@ class Sonify {
 
 		try {
 			for(int i = 0; i < 5; i++){
+				map.get("FRANCE")[i] = new MultiChannelBuffer(1,2);		
 				// minim.loadFileIntoBuffer(sketchPath("") + "../audio/france-" + i + ".wav", map.get("FRANCE")[i]);
+ 				minim.loadFileIntoBuffer(sketchPath("") + "../audio/usa-" + i + ".wav", map.get("FRANCE")[i]);// !!
+
 				map.get("USA")[i] = new MultiChannelBuffer(1,2);		
 				minim.loadFileIntoBuffer(sketchPath("") + "../audio/usa-" + i + ".wav", map.get("USA")[i]);
+
+				map.get("CHINA")[i] = new MultiChannelBuffer(1,2);				
 				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/china-" + i + ".wav", map.get("CHINA")[i]);
+				minim.loadFileIntoBuffer(sketchPath("") + "../audio/usa-" + i + ".wav", map.get("CHINA")[i]); // !!
+
+				map.get("UK")[i] = new MultiChannelBuffer(1,2);
 				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/uk-" + i + ".wav", map.get("UK")[i]);
-				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/ussr-" + i + ".wav",map.get("USSR")[i]); // !
-				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/india-" + i + ".wav", map.get("INDIA")[i]); // !
-				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/pakistan-" + i + ".wav", map.get("PAKIST")[i]); // !
+				minim.loadFileIntoBuffer(sketchPath("") + "../audio/usa-" + i + ".wav", map.get("UK")[i]); // !!
+
+				map.get("USSR")[i] = new MultiChannelBuffer(1,2);
+				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/ussr-" + i + ".wav",map.get("USSR")[i]); 
+				minim.loadFileIntoBuffer(sketchPath("") + "../audio/usa-" + i + ".wav", map.get("USSR")[i]);// !!
+
+				map.get("INDIA")[i] = new MultiChannelBuffer(1,2);
+				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/india-" + i + ".wav", map.get("INDIA")[i]); 
+				minim.loadFileIntoBuffer(sketchPath("") + "../audio/usa-" + i + ".wav", map.get("INDIA")[i]);// !!
+
+				map.get("PAKIST")[i] = new MultiChannelBuffer(1,2);
+				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/pakistan-" + i + ".wav", map.get("PAKIST")[i]); 
+				minim.loadFileIntoBuffer(sketchPath("") + "../audio/usa-" + i + ".wav", map.get("PAKIST")[i]); // !!
 			}
 		}
 		catch(Exception e){
@@ -116,8 +126,7 @@ class Sonify {
 
 	public MultiChannelBuffer[] pickCountry(int i){
 		if(map.containsKey(dataset[i].country)){
-			//return map.get(dataset[i].country);
-			return map.get("USA");
+			return map.get(dataset[i].country);
 		}
 		else{
 			println("Sonify: Error! Undefined country! Loading default");
@@ -136,23 +145,21 @@ class Sonify {
 	}
 
 	public float pickPan(int i){
-		float pan = - map(dataset[i].lon, -169, 179, -1, 1);
+		float pan = -map(dataset[i].lon, -169, 179, -1, 1);
 		return pan;	
 	}
 
 	public BitCrush pickBit(int i){
 		float bits = log((dataset[i].yield_u+0.0001)/50000);
-
 		bits = round(map(bits, -21, 0, 14, 5));
 		BitCrush crusher = new BitCrush(bits, 44100);
-		println(bits +" - " + dataset[i].yield_u);
 		return crusher;		
 	}
 
 	public void updateSamples(){
 		while (!samples.isEmpty() && samples.size() >= max_samples){			
-			samples.get(0).dispose();
-			samples.remove(0);
+			samples.getFirst().dispose();
+			samples.removeFirst();
 		}
 	}
 
@@ -167,14 +174,14 @@ class Sonify {
 
 	public void play(int i) {
 		updateSamples();
-		buffs = pickCountry(i);
-		buff = pickOctave(buffs, i);
+		MultiChannelBuffer[] buffs = pickCountry(i);
+		MultiChannelBuffer buff = pickOctave(buffs, i);
 		Pan pan = new Pan(pickPan(i));
 		Sampler sample = new Sampler(buff, 44100, 1);
 		Constant amplitude = new Constant(pickVolume(i));
 		BitCrush crusher = pickBit(i);
 		Chain chain = new Chain(sample, pan, amplitude, crusher);
-		samples.add(chain);
+		samples.addLast(chain);
 		chain.play();
 	}
 };
