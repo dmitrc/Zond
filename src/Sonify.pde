@@ -22,13 +22,19 @@ class Sonify {
 
 	public Pan[] pannerList = new Pan[37];
 
-	int voices=1000;
+	public Summer[] panSummerList = new Summer[37];
 
-	float xCenter=0;
-	float yCenter=0;
+	Sampler sampler;
+	Sampler[] samplers;
+	Summer summer;
+
+	int voices = 50;
+
+	float xCenter = 0;
+	float yCenter = 0;
 
 	Sonify() {
-		out=minim.getLineOut();
+		out = minim.getLineOut();
 
 		map = new HashMap<String, Sampler[]>();
 		octaves = new HashMap<String, Integer>();
@@ -56,24 +62,26 @@ class Sonify {
 		octaves.put("SE",0);
 
 		try {
-			for(int i=0; i<5; i++){
-				//map.get("FRANCE")[i] = new Sampler(sketchPath("") + "../audio/france-"+i+".wav", voices, minim);
+			for(int i = 0; i < 5; i++){
+				//map.get("FRANCE")[i] = new Sampler(sketchPath("") + "../audio/france-" + i + ".wav", voices, minim);		map.get("USA")[0]patch(pan);
 				map.get("USA")[i] = new Sampler(sketchPath("") + "../audio/usa-" + i + ".wav", voices, minim);
-				//map.get("CHINA")[i] = new Sampler(sketchPath("") + "../audio/china-"+i+".wav", voices, minim);
-				//map.get("UK")[i] = new Sampler(sketchPath("") + "../audio/uk-"+i+".wav", voices, minim);
-				//map.get("USSR")[i] = new Sampler(sketchPath("") + "../audio/ussr-"+i+".wav", voices, minim); // !
-				//map.get("INDIA")[i] = new Sampler(sketchPath("") + "../audio/india-"+i+".wav", voices, minim); // !
-				//map.get("PAKIST")[i] = new Sampler(sketchPath("") + "../audio/pakistan-"+i+".wav", voices, minim); // !
+				//map.get("CHINA")[i] = new Sampler(sketchPath("") + "../audio/china-" + i + ".wav", voices, minim);
+				//map.get("UK")[i] = new Sampler(sketchPath("") + "../audio/uk-" + i + ".wav", voices, minim);
+				//map.get("USSR")[i] = new Sampler(sketchPath("") + "../audio/ussr-" + i + ".wav", voices, minim); // !
+				//map.get("INDIA")[i] = new Sampler(sketchPath("") + "../audio/india-" + i + ".wav", voices, minim); // !
+				//map.get("PAKIST")[i] = new Sampler(sketchPath("") + "../audio/pakistan-" + i + ".wav", voices, minim); // !
 			}
 		}
 		catch(Exception e){
 			println("Sonify: Error! Can't open one of the sample files!");
 		}	
 
-		for(int i=0; i<37; i++){
-			float panValue=-(1.0/18.0)*(18.0-i);
-			pannerList[i]=new Pan(panValue);
+		for(int i = 0; i < 37; i++){
+			float panValue = (1.0 / 18.0) * (i - 18.0);
+			pannerList[i] = new Pan(panValue);
 			pannerList[i].patch(out);
+			panSummerList[i] = new Summer();
+			panSummerList[i].patch(pannerList[i]);
 		}
 	}
 
@@ -87,15 +95,7 @@ class Sonify {
 			return map.get("USA");
 		}	
 	}
-
-	public void pickPan(Sampler sampler, int i){
-		int panValue=round(dataset[i].lon+180)/10;
-		for(int j=0; j<37; j++){
-					sampler.unpatch(pannerList[j]);
-		}
-		sampler.patch(pannerList[panValue]);
-	}
-
+	
 	public Sampler pickOctave(Sampler[] country, int i){
 		if(octaves.containsKey(dataset[i].purpose)){
 			return country[octaves.get(dataset[i].purpose)];
@@ -106,9 +106,22 @@ class Sonify {
 		}	
 	}
 
+	public Summer pickPan(Sampler sampler, int i){
+		int panValue = round(dataset[i].lon / 10 + 18);
+		println(panValue);
+		return panSummerList[panValue];	
+	}
+
+	public void pickFilter(){
+
+	}
+
 	public void play(int i) {
-		Sampler sampler = pickOctave(pickCountry(i), i);
-		pickPan(sampler,i);
+		samplers = pickCountry(i);
+		sampler = pickOctave(samplers, i);
+		//summer = pickPan(sampler, i);
+		//sampler.patch(summer);
+		sampler.patch(out);
 		sampler.trigger();
 	}
 
