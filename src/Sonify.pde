@@ -22,13 +22,21 @@ class Sonify {
 
 	int voices=25;
 
-	Sonify() {
+	float xCenter=0;
+	float yCenter=0;
 
+	Sonify() {
 		out=minim.getLineOut();
 
 		map = new HashMap<String, Sampler[]>();
 		octaves = new HashMap<String, Integer>();
 
+		init();
+
+			
+	}
+
+	public void init(){
 		map.put("FRANCE", FRANCE);
 		map.put("USA", USA);
 		map.put("CHINA", CHINA);
@@ -50,19 +58,12 @@ class Sonify {
 		try {
 			for(int i=0; i<5; i++){
 				//map.get("FRANCE")[i] = new Sampler(sketchPath("") + "../audio/france-"+i+".wav", voices, minim);
-				//map.get("FRANCE")[i].patch(out);
 				map.get("USA")[i] = new Sampler(sketchPath("") + "../audio/usa-" + i + ".wav", voices, minim);
-				map.get("USA")[i].patch(out);
 				//map.get("CHINA")[i] = new Sampler(sketchPath("") + "../audio/china-"+i+".wav", voices, minim);
-				//map.get("CHINA")[i].patch(out);	
 				//map.get("UK")[i] = new Sampler(sketchPath("") + "../audio/uk-"+i+".wav", voices, minim);
-				//map.get("UK")[i].patch(out);
 				//map.get("USSR")[i] = new Sampler(sketchPath("") + "../audio/ussr-"+i+".wav", voices, minim); // !
-				//map.get("USSR")[i].patch(out);
 				//map.get("INDIA")[i] = new Sampler(sketchPath("") + "../audio/india-"+i+".wav", voices, minim); // !
-				//map.get("INDIA")[i].patch(out);
 				//map.get("PAKIST")[i] = new Sampler(sketchPath("") + "../audio/pakistan-"+i+".wav", voices, minim); // !
-				//map.get("PAKIST")[i].patch(out);
 			}
 		}
 		catch(Exception e){
@@ -81,6 +82,14 @@ class Sonify {
 		}	
 	}
 
+	public void pickPan(Sampler sampler, int i){
+		Pan pan = new Pan(0);
+		float panValue=((2)*(dataset[i].lat+180))/(360)-1;
+		pan.setPan(panValue);
+		sampler.patch(pan);
+		pan.patch(out);
+	}
+
 	public Sampler pickOctave(Sampler[] country, int i){
 		if(octaves.containsKey(dataset[i].purpose)){
 			return country[octaves.get(dataset[i].purpose)];
@@ -93,6 +102,7 @@ class Sonify {
 
 	public void play(int i) {
 		Sampler sampler = pickOctave(pickCountry(i), i);
+		pickPan(sampler,i);
 		sampler.trigger();
 	}
 
