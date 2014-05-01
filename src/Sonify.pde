@@ -22,8 +22,6 @@ class Sonify {
 	public MultiChannelBuffer[] INDIA = new MultiChannelBuffer[5];
 	public MultiChannelBuffer[] PAKIST = new MultiChannelBuffer[5];
 
-	public float[] pannerList = new float[37];
-
 	MultiChannelBuffer buff;
 	MultiChannelBuffer[] buffs;
 
@@ -93,10 +91,6 @@ class Sonify {
 		catch(Exception e){
 			println("Sonify: Error! Can't open one of the sample files!");
 		}	
-
-		for(int i = 0; i < 37; i++){
-			pannerList[i] = - (1.0 / 18.0) * (i - 18.0);
-		}		
 	}
 
 	public MultiChannelBuffer[] pickCountry(int i){
@@ -121,9 +115,9 @@ class Sonify {
 	}
 
 	public float pickPan(int i){
-		int panValue = round(dataset[i].lon / 10.0 ) + 18;
-		println(pannerList[panValue]);
-		return pannerList[panValue];	
+		float pan = - map(dataset[i].lon, -169, 179, -1, 1);
+		println(pan);
+		return pan;	
 	}
 
 	public void pickFilter(){
@@ -158,5 +152,4 @@ class Sonify {
 	public int getVolume(){
 		return 1;
 	}
-
 };
