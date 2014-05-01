@@ -7,61 +7,93 @@ import ddf.minim.effects.*;
 
 class Sonify {
 
-	public AudioSample france = null;
-	public AudioSample usa = null;
-	public AudioSample china = null;
-	public AudioSample uk = null;
-	public AudioSample ussr = null;
-	public AudioSample india = null;
-	public AudioSample pakistan = null;
+	Map<String, Sampler[]> map;
+	Map<String, Integer> octaves;
+
+	AudioOutput out;
+
+	public Sampler[] FRANCE = new Sampler[5];
+	public Sampler[] USA = new Sampler[5];
+	public Sampler[] CHINA = new Sampler[5];
+	public Sampler[] UK = new Sampler[5];
+	public Sampler[] USSR = new Sampler[5];
+	public Sampler[] INDIA = new Sampler[5];
+	public Sampler[] PAKIST = new Sampler[5];
+
+	int voices=25;
 
 	Sonify() {
+
+		out=minim.getLineOut();
+
+		map = new HashMap<String, Sampler[]>();
+		octaves = new HashMap<String, Integer>();
+
+		map.put("FRANCE", FRANCE);
+		map.put("USA", USA);
+		map.put("CHINA", CHINA);
+		map.put("UK", UK);
+		map.put("USSR", USSR);
+		map.put("INDIA", INDIA);
+		map.put("PAKIST", PAKIST);
+
+		octaves.put("COMBAT",4);
+		octaves.put("WR",3);
+		octaves.put("ME",3);
+		octaves.put("FMS",2);
+		octaves.put("TRANSP",2);
+		octaves.put("WE",1);
+		octaves.put("PNE",1);
+		octaves.put("SAM",0);
+		octaves.put("SE",0);
+
 		try {
-
-			france = minim.loadSample(sketchPath("") + "../audio/france.wav");
-			usa = minim.loadSample(sketchPath("") + "../audio/usa.wav");
-			china = minim.loadSample(sketchPath("") + "../audio/china.wav");	
-			uk = minim.loadSample(sketchPath("") + "../audio/uk.wav");
-			ussr = minim.loadSample(sketchPath("") + "../audio/usa.wav"); // !
-			india = minim.loadSample(sketchPath("") + "../audio/usa.wav"); // !
-			pakistan = minim.loadSample(sketchPath("") + "../audio/usa.wav"); // !
-
+			for(int i=0; i<5; i++){
+				//map.get("FRANCE")[i] = new Sampler(sketchPath("") + "../audio/france-"+i+".wav", voices, minim);
+				//map.get("FRANCE")[i].patch(out);
+				map.get("USA")[i] = new Sampler(sketchPath("") + "../audio/usa-" + i + ".wav", voices, minim);
+				map.get("USA")[i].patch(out);
+				//map.get("CHINA")[i] = new Sampler(sketchPath("") + "../audio/china-"+i+".wav", voices, minim);
+				//map.get("CHINA")[i].patch(out);	
+				//map.get("UK")[i] = new Sampler(sketchPath("") + "../audio/uk-"+i+".wav", voices, minim);
+				//map.get("UK")[i].patch(out);
+				//map.get("USSR")[i] = new Sampler(sketchPath("") + "../audio/ussr-"+i+".wav", voices, minim); // !
+				//map.get("USSR")[i].patch(out);
+				//map.get("INDIA")[i] = new Sampler(sketchPath("") + "../audio/india-"+i+".wav", voices, minim); // !
+				//map.get("INDIA")[i].patch(out);
+				//map.get("PAKIST")[i] = new Sampler(sketchPath("") + "../audio/pakistan-"+i+".wav", voices, minim); // !
+				//map.get("PAKIST")[i].patch(out);
+			}
 		}
 		catch(Exception e){
 			println("Sonify: Error! Can't open one of the sample files!");
-		}
+		}		
 	}
 
+	public Sampler[] pickCountry(int i){
+		if(map.containsKey(dataset[i].country)){
+			//return map.get(dataset[i].country);
+			return map.get("USA");
+		}
+		else{
+			println("Sonify: Error! Undefined country! Loading default");
+			return map.get("USA");
+		}	
+	}
 
+	public Sampler pickOctave(Sampler[] country, int i){
+		if(octaves.containsKey(dataset[i].purpose)){
+			return country[octaves.get(dataset[i].purpose)];
+		}
+		else{
+			println("Sonify: Error! Undefined purpose! Loading default");
+			return country[1];
+		}	
+	}
 
 	public void play(int i) {
-		 
-		if (dataset[i].country.equals("CHINA")){
-		 	china.trigger();
-		}
-		else if (dataset[i].country.equals("UK")){
-			uk.trigger();
-		}
-		else if (dataset[i].country.equals("USA")){
-			//usa.trigger();
-		}
-		else if (dataset[i].country.equals("FRANCE")){
-			france.trigger();
-		}
-		else if (dataset[i].country.equals("USSR")){
-			ussr.trigger();
-		}
-		else if (dataset[i].country.equals("INDIA")){
-			india.trigger();
-		}
-		else if (dataset[i].country.equals("PAKIST")){
-			pakistan.trigger();
-		}
-		else {
-			println("Sonify: Error! Country \"" + dataset[i].country + "\" isn't identified! Using sample for USA...");
-			//usa.trigger();
-		}	
-	
+		Sampler sampler = pickOctave(pickCountry(i), i);
+		sampler.trigger();
 	}
 
 
