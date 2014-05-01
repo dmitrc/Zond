@@ -7,35 +7,53 @@ import ddf.minim.effects.*;
 
 class Sonify {
 
-	Map<String, Sampler[]> map;
+	Map<String, MultiChannelBuffer[]> map;
 	Map<String, Integer> octaves;
 
 	AudioOutput out;
 
-	public Sampler[] FRANCE = new Sampler[5];
-	public Sampler[] USA = new Sampler[5];
-	public Sampler[] CHINA = new Sampler[5];
-	public Sampler[] UK = new Sampler[5];
-	public Sampler[] USSR = new Sampler[5];
-	public Sampler[] INDIA = new Sampler[5];
-	public Sampler[] PAKIST = new Sampler[5];
+	int sampleCount = 50;
 
-	public Pan[] pannerList = new Pan[37];
-	public Summer[] panSummerList = new Summer[37];
+	public MultiChannelBuffer[] FRANCE = new MultiChannelBuffer[5];
+	public MultiChannelBuffer[] USA = new MultiChannelBuffer[5];
+	public MultiChannelBuffer[] CHINA = new MultiChannelBuffer[5];
+	public MultiChannelBuffer[] UK = new MultiChannelBuffer[5];
+	public MultiChannelBuffer[] USSR = new MultiChannelBuffer[5];
+	public MultiChannelBuffer[] INDIA = new MultiChannelBuffer[5];
+	public MultiChannelBuffer[] PAKIST = new MultiChannelBuffer[5];
 
-	Sampler sampler;
-	Sampler[] samplers;
-	Summer summer;
+	public float[] pannerList = new float[37];
 
-	int voices = 50;
+	MultiChannelBuffer buff;
+	MultiChannelBuffer[] buffs;
 
-	float xCenter = 0;
-	float yCenter = 0;
+	private class Chain {
+		Sampler sampler;
+		Pan pan;
+
+		Chain(Sampler inputSampler, Pan inputPan){
+			sampler = inputSampler;
+			pan = inputPan;
+			sampler.patch(pan);
+			pan.patch(out);
+		}
+
+		public void dispose(){
+			sampler.unpatch(pan);
+			pan.unpatch(out);
+		}
+
+		public void play(){
+			sampler.trigger();
+		}
+	}
+
+	ArrayList<Chain> samples = new ArrayList<Chain>();
 
 	Sonify() {
 		out = minim.getLineOut();
 
-		map = new HashMap<String, Sampler[]>();
+		map = new HashMap<String, MultiChannelBuffer[]>();
 		octaves = new HashMap<String, Integer>();
 
 		init();			
@@ -62,13 +80,14 @@ class Sonify {
 
 		try {
 			for(int i = 0; i < 5; i++){
-				//map.get("FRANCE")[i] = new Sampler(sketchPath("") + "../audio/france-" + i + ".wav", voices, minim);		map.get("USA")[0]patch(pan);
-				map.get("USA")[i] = new Sampler(sketchPath("") + "../audio/usa-" + i + ".wav", voices, minim);
-				//map.get("CHINA")[i] = new Sampler(sketchPath("") + "../audio/china-" + i + ".wav", voices, minim);
-				//map.get("UK")[i] = new Sampler(sketchPath("") + "../audio/uk-" + i + ".wav", voices, minim);
-				//map.get("USSR")[i] = new Sampler(sketchPath("") + "../audio/ussr-" + i + ".wav", voices, minim); // !
-				//map.get("INDIA")[i] = new Sampler(sketchPath("") + "../audio/india-" + i + ".wav", voices, minim); // !
-				//map.get("PAKIST")[i] = new Sampler(sketchPath("") + "../audio/pakistan-" + i + ".wav", voices, minim); // !
+				// minim.loadFileIntoBuffer(sketchPath("") + "../audio/france-" + i + ".wav", map.get("FRANCE")[i]);
+				map.get("USA")[i] = new MultiChannelBuffer(1,2);		
+				minim.loadFileIntoBuffer(sketchPath("") + "../audio/usa-" + i + ".wav", map.get("USA")[i]);
+				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/china-" + i + ".wav", map.get("CHINA")[i]);
+				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/uk-" + i + ".wav", map.get("UK")[i]);
+				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/ussr-" + i + ".wav",map.get("USSR")[i]); // !
+				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/india-" + i + ".wav", map.get("INDIA")[i]); // !
+				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/pakistan-" + i + ".wav", map.get("PAKIST")[i]); // !
 			}
 		}
 		catch(Exception e){
@@ -76,15 +95,11 @@ class Sonify {
 		}	
 
 		for(int i = 0; i < 37; i++){
-			float panValue = (1.0 / 18.0) * (i - 18.0);
-			pannerList[i] = new Pan(panValue);
-			pannerList[i].patch(out);
-			panSummerList[i] = new Summer();
-			panSummerList[i].patch(pannerList[i]);
-		}
+			pannerList[i] = - (1.0 / 18.0) * (i - 18.0);
+		}		
 	}
 
-	public Sampler[] pickCountry(int i){
+	public MultiChannelBuffer[] pickCountry(int i){
 		if(map.containsKey(dataset[i].country)){
 			//return map.get(dataset[i].country);
 			return map.get("USA");
@@ -95,7 +110,7 @@ class Sonify {
 		}	
 	}
 
-	public Sampler pickOctave(Sampler[] country, int i){
+	public MultiChannelBuffer pickOctave(MultiChannelBuffer[] country, int i){
 		if(octaves.containsKey(dataset[i].purpose)){
 			return country[octaves.get(dataset[i].purpose)];
 		}
@@ -105,22 +120,34 @@ class Sonify {
 		}	
 	}
 
-	public Summer pickPan(Sampler sampler, int i){
+	public float pickPan(int i){
 		int panValue = round(dataset[i].lon / 10.0 ) + 18;
-		println(panValue);
-		return panSummerList[panValue];	
+		println(pannerList[panValue]);
+		return pannerList[panValue];	
 	}
 
 	public void pickFilter(){
 
 	}
 
+	public void updateSamples(){
+		if (samples.size() > sampleCount){
+			samples.get(0).dispose();
+			samples.remove(0);
+		}
+	}
+
 	public void play(int i) {
-		samplers = pickCountry(i);
-		sampler = pickOctave(samplers, i);
-		summer = pickPan(sampler, i);
-		sampler.patch(summer);
-		sampler.trigger();
+		updateSamples();
+		buffs = pickCountry(i);
+		buff = pickOctave(buffs, i);
+		Pan pan = new Pan(pickPan(i));
+		Sampler sample = new Sampler(buff, 44100, 1);
+		//sample.patch(pan);
+		//pan.patch(out);
+		Chain chain = new Chain(sample,pan);
+		samples.add(chain);
+		chain.play();
 	}
 
 
