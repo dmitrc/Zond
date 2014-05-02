@@ -157,9 +157,14 @@ class Sonify {
 	}
 
 	public void updateSamples(){
-		while (!samples.isEmpty() && samples.size() >= max_samples){			
-			samples.getFirst().dispose();
-			samples.removeFirst();
+		while (!samples.isEmpty() && samples.size() >= max_samples) {		
+			try {	
+				samples.getFirst().dispose();
+				samples.removeFirst();
+			}
+			catch (Exception e) {
+				println("Sonify: Error! Minim used Unpatch. Minim is confused. Minim hurt itself in its confusion.");
+			}
 		}
 	}
 
