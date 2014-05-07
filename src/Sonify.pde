@@ -92,8 +92,8 @@ class Sonify {
 		try {
 			for(int i = 0; i < 5; i++){
 				map.get("FRANCE")[i] = new MultiChannelBuffer(1,2);		
-				// minim.loadFileIntoBuffer(sketchPath("") + "../audio/france-" + i + ".wav", map.get("FRANCE")[i]);
- 				minim.loadFileIntoBuffer(sketchPath("") + "../audio/usa-" + i + ".wav", map.get("FRANCE")[i]);// !!
+				 minim.loadFileIntoBuffer(sketchPath("") + "../audio/france-" + i + ".wav", map.get("FRANCE")[i]);
+ 				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/usa-" + i + ".wav", map.get("FRANCE")[i]);// !!
 
 				map.get("USA")[i] = new MultiChannelBuffer(1,2);		
 				minim.loadFileIntoBuffer(sketchPath("") + "../audio/usa-" + i + ".wav", map.get("USA")[i]);
