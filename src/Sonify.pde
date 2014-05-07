@@ -38,10 +38,15 @@ class Sonify {
 			pan.patch(out);
 		}
 
-		public void dispose(){
-			sampler.unpatch(crusher);
-			crusher.unpatch(pan);
-			pan.unpatch(out);
+		public void dispose() {
+			try { 
+				sampler.unpatch(crusher);
+				crusher.unpatch(pan);
+				pan.unpatch(out);
+			}
+			catch (Exception e) {
+				println("Sonify: Minim used Unpatch. Minim is confused. Minim hurt itself in its confusion!");
+			}
 		}
 
 		public void play(){
