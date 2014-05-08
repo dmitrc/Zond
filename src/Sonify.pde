@@ -97,23 +97,19 @@ class Sonify {
 		try {
 			for(int i = 0; i < 5; i++){
 				map.get("FRANCE")[i] = new MultiChannelBuffer(1,2);		
-				 minim.loadFileIntoBuffer(sketchPath("") + "../audio/france-" + i + ".wav", map.get("FRANCE")[i]);
- 				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/usa-" + i + ".wav", map.get("FRANCE")[i]);// !!
+				minim.loadFileIntoBuffer(sketchPath("") + "../audio/france-" + i + ".wav", map.get("FRANCE")[i]);
 
 				map.get("USA")[i] = new MultiChannelBuffer(1,2);		
 				minim.loadFileIntoBuffer(sketchPath("") + "../audio/usa-" + i + ".wav", map.get("USA")[i]);
 
 				map.get("CHINA")[i] = new MultiChannelBuffer(1,2);				
-				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/china-" + i + ".wav", map.get("CHINA")[i]);
-				minim.loadFileIntoBuffer(sketchPath("") + "../audio/usa-" + i + ".wav", map.get("CHINA")[i]); // !!
+				minim.loadFileIntoBuffer(sketchPath("") + "../audio/china-" + i + ".wav", map.get("CHINA")[i]);
 
 				map.get("UK")[i] = new MultiChannelBuffer(1,2);
-				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/uk-" + i + ".wav", map.get("UK")[i]);
-				minim.loadFileIntoBuffer(sketchPath("") + "../audio/usa-" + i + ".wav", map.get("UK")[i]); // !!
+				minim.loadFileIntoBuffer(sketchPath("") + "../audio/uk-" + i + ".wav", map.get("UK")[i]);
 
 				map.get("USSR")[i] = new MultiChannelBuffer(1,2);
-				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/ussr-" + i + ".wav",map.get("USSR")[i]); 
-				minim.loadFileIntoBuffer(sketchPath("") + "../audio/usa-" + i + ".wav", map.get("USSR")[i]);// !!
+				minim.loadFileIntoBuffer(sketchPath("") + "../audio/ussr-" + i + ".wav",map.get("USSR")[i]); 
 
 				map.get("INDIA")[i] = new MultiChannelBuffer(1,2);
 				//minim.loadFileIntoBuffer(sketchPath("") + "../audio/india-" + i + ".wav", map.get("INDIA")[i]); 
