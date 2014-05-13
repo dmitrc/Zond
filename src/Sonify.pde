@@ -102,7 +102,6 @@ class Sonify {
 		octaves.put("SAM",0);
 		octaves.put("SE",0);
 		octaves.put("TO",0);
-		octaves.put("TRANSP",0);
 
 		volumes.put("UW",0.30);
 		volumes.put("SHAFT",0.37);
