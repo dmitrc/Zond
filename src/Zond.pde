@@ -14,7 +14,6 @@ int max_samples = 60;
 
 Datapoint[] dataset = null;
 Minim minim = null;
-AudioRecorder recorder = null;
 Sonify sonify = null;
 Drawer drawer = null;
 ControlP5 cp5 = null;

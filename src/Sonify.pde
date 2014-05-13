@@ -94,12 +94,8 @@ class Sonify {
 		volumes.put("AIRDROP",0.95);
 		volumes.put("ROCKET",1.0);
 
-		if (debug) {
-			recorder = minim.createRecorder(out, "../out.wav");
-		}
-
 		try {
-			for(int i = 0; i < 5; i++){
+			for (int i = 0; i < 5; i++){
 				map.get("FRANCE")[i] = new MultiChannelBuffer(1,2);		
 				minim.loadFileIntoBuffer("audio/france-" + i + ".wav", map.get("FRANCE")[i]);
 
@@ -181,15 +177,6 @@ class Sonify {
 	}
 
 	public void play(int i) {
-		if (debug) {
-			if (i == 0){
-				recorder.beginRecord();
-			}
-			if (i == 4){ // temporary checker for enrecord !!! needs figuring out
-				recorder.endRecord();
-			}
-		}
-
 		updateSamples();
 
 		MultiChannelBuffer[] buffs = pickCountry(i);
@@ -199,7 +186,7 @@ class Sonify {
 		Constant amplitude = new Constant(pickVolume(i));
 		BitCrush crusher = pickBit(i);
 		Chain chain = new Chain(sample, pan, amplitude, crusher);
-		
+
 		samples.addLast(chain);
 		chain.play();
 	}
