@@ -68,7 +68,7 @@ class Parser {
 
 	public Datapoint[] parse_file (String filename) {
 	
-		String[] data = loadStrings("../data/"+filename);	
+		String[] data = loadStrings(filename);	
 		int count = data.length;
 
 		if (data == null) {

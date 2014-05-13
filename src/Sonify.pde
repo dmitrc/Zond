@@ -94,30 +94,32 @@ class Sonify {
 		volumes.put("AIRDROP",0.95);
 		volumes.put("ROCKET",1.0);
 
-		recorder = minim.createRecorder(out, "../audio/out.wav");
+		if (debug) {
+			recorder = minim.createRecorder(out, "../out.wav");
+		}
 
 		try {
 			for(int i = 0; i < 5; i++){
 				map.get("FRANCE")[i] = new MultiChannelBuffer(1,2);		
-				minim.loadFileIntoBuffer(sketchPath("") + "../audio/france-" + i + ".wav", map.get("FRANCE")[i]);
+				minim.loadFileIntoBuffer("audio/france-" + i + ".wav", map.get("FRANCE")[i]);
 
 				map.get("USA")[i] = new MultiChannelBuffer(1,2);		
-				minim.loadFileIntoBuffer(sketchPath("") + "../audio/usa-" + i + ".wav", map.get("USA")[i]);
+				minim.loadFileIntoBuffer("audio/usa-" + i + ".wav", map.get("USA")[i]);
 
 				map.get("CHINA")[i] = new MultiChannelBuffer(1,2);				
-				minim.loadFileIntoBuffer(sketchPath("") + "../audio/china-" + i + ".wav", map.get("CHINA")[i]);
+				minim.loadFileIntoBuffer("audio/china-" + i + ".wav", map.get("CHINA")[i]);
 
 				map.get("UK")[i] = new MultiChannelBuffer(1,2);
-				minim.loadFileIntoBuffer(sketchPath("") + "../audio/uk-" + i + ".wav", map.get("UK")[i]);
+				minim.loadFileIntoBuffer("audio/uk-" + i + ".wav", map.get("UK")[i]);
 
 				map.get("USSR")[i] = new MultiChannelBuffer(1,2);
-				minim.loadFileIntoBuffer(sketchPath("") + "../audio/ussr-" + i + ".wav",map.get("USSR")[i]); 
+				minim.loadFileIntoBuffer("audio/ussr-" + i + ".wav",map.get("USSR")[i]); 
 
 				map.get("INDIA")[i] = new MultiChannelBuffer(1,2);
-				minim.loadFileIntoBuffer(sketchPath("") + "../audio/india-" + i + ".wav", map.get("INDIA")[i]); 
+				minim.loadFileIntoBuffer("audio/india-" + i + ".wav", map.get("INDIA")[i]); 
 
 				map.get("PAKIST")[i] = new MultiChannelBuffer(1,2);
-				minim.loadFileIntoBuffer(sketchPath("") + "../audio/pakistan-" + i + ".wav", map.get("PAKIST")[i]);
+				minim.loadFileIntoBuffer("audio/pakistan-" + i + ".wav", map.get("PAKIST")[i]);
 			}
 		}
 		catch(Exception e){
@@ -179,13 +181,17 @@ class Sonify {
 	}
 
 	public void play(int i) {
-		if(i==0){
-			recorder.beginRecord();
+		if (debug) {
+			if (i == 0){
+				recorder.beginRecord();
+			}
+			if (i == 4){ // temporary checker for enrecord !!! needs figuring out
+				recorder.endRecord();
+			}
 		}
-		if(i==4){ // temporary checker for enrecord !!! needs figuring out
-			recorder.endRecord();
-		}
+
 		updateSamples();
+
 		MultiChannelBuffer[] buffs = pickCountry(i);
 		MultiChannelBuffer buff = pickOctave(buffs, i);
 		Pan pan = new Pan(pickPan(i));
@@ -193,6 +199,7 @@ class Sonify {
 		Constant amplitude = new Constant(pickVolume(i));
 		BitCrush crusher = pickBit(i);
 		Chain chain = new Chain(sample, pan, amplitude, crusher);
+		
 		samples.addLast(chain);
 		chain.play();
 	}

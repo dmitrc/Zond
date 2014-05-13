@@ -1,4 +1,5 @@
 .DS_Store
-obj/*
-bin/*
-main
+obj
+bin
+Zond
+out.wav
