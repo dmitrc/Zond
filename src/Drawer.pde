@@ -60,13 +60,13 @@ class Drawer {
 		colors = new HashMap<String,Color>();
 
 		// Default colors
-		colors.put("FRANCE", new Color(27, 161, 147));
-		colors.put("USA", new Color(27, 63, 161));
-		colors.put("CHINA", new Color(232, 116, 191));
-		colors.put("UK", new Color(15, 110, 34));
-		colors.put("INDIA", new Color(115, 76, 10));
-		colors.put("PAKIST", new Color(57, 10, 115));
-		colors.put("USSR", new Color(171, 34, 34));
+		colors.put("FRANCE", new Color(255, 142, 0));
+		colors.put("USA", new Color(25, 36, 177));
+		colors.put("CHINA", new Color(255, 134, 115));
+		colors.put("UK", new Color(55, 182, 206));
+		colors.put("INDIA", new Color(0, 133, 0));
+		colors.put("PAKIST", new Color(161, 40, 95));
+		colors.put("USSR", new Color(248, 0, 18));
 	}
 
 	public void reset() {
