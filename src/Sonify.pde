@@ -94,6 +94,8 @@ class Sonify {
 		volumes.put("AIRDROP",0.95);
 		volumes.put("ROCKET",1.0);
 
+		recorder = minim.createRecorder(out, "../audio/out.wav");
+
 		try {
 			for(int i = 0; i < 5; i++){
 				map.get("FRANCE")[i] = new MultiChannelBuffer(1,2);		
@@ -144,7 +146,7 @@ class Sonify {
 	}
 
 	public float pickPan(int i){
-		float pan = -map(dataset[i].lon, -169, 179, -1, 1);
+		float pan = map(dataset[i].lon, -169, 179, -1, 1);
 		return pan;	
 	}
 
@@ -177,6 +179,12 @@ class Sonify {
 	}
 
 	public void play(int i) {
+		if(i==0){
+			recorder.beginRecord();
+		}
+		if(i==4){ // temporary checker for enrecord !!! needs figuring out
+			recorder.endRecord();
+		}
 		updateSamples();
 		MultiChannelBuffer[] buffs = pickCountry(i);
 		MultiChannelBuffer buff = pickOctave(buffs, i);
