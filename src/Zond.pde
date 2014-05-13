@@ -8,7 +8,7 @@ int next_timeout = 0;
 int menubar_height = 0;
 int current_index = 0;
 float speed_multiplier = 1.0;
-boolean debug = true;
+boolean debug = false;
 boolean is_playing = false;
 int max_samples = 60;
 
@@ -171,8 +171,9 @@ void speed(float val) {
 	else {
 		speed_multiplier = 1/val;
 	}
-	if(val>1){
-		max_samples=round(60/val);
+
+	if (val > 1) {
+		max_samples = round(60/val);
 	}
 }
 
@@ -184,7 +185,6 @@ void draw() {
 			if (millis() - next_timeout > dataset[current_index].time_since * speed_multiplier) {
 				next_timeout = millis();
 
-				println("Index: " + current_index);
 				drawer.draw(current_index);
 	      		sonify.play(current_index);
 

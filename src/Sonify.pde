@@ -90,7 +90,7 @@ class Sonify {
 		volumes.put("SURFACE",0.58);
 		volumes.put("BARGE",0.65);
 		volumes.put("TOWER",0.82);
-		volumes.put("BALOON",0.89);
+		volumes.put("BALLOON",0.89);
 		volumes.put("AIRDROP",0.95);
 		volumes.put("ROCKET",1.0);
 
