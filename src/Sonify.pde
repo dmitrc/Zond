@@ -75,24 +75,54 @@ class Sonify {
 
 		octaves.put("COMBAT",4);
 		octaves.put("WR",3);
+		octaves.put("WR/P/SA",3);
+		octaves.put("WR/F/SA",3);
+		octaves.put("WR/P/S",3);
+		octaves.put("WR/WE/S",3);
+		octaves.put("WR/WE",3);
+		octaves.put("WR/SE",3);
+		octaves.put("WR/PNE",3);
+		octaves.put("WR/FMS",3);
+		octaves.put("WR/SAM",3);
+		octaves.put("WR/F/S",3);
+		octaves.put("WP",3);
 		octaves.put("ME",3);
+		octaves.put("MR",3);
 		octaves.put("FMS",2);
+		octaves.put("FMS/WR",2);
+		octaves.put("FIR",2);
 		octaves.put("TRANSP",2);
 		octaves.put("WE",1);
+		octaves.put("WE/SAM",1);
+		octaves.put("WE/WR",1);
 		octaves.put("PNE",1);
+		octaves.put("PNE/WR",1);
+		octaves.put("PNE:PLO",1);
+		octaves.put("PNE:V",1); 
 		octaves.put("SAM",0);
 		octaves.put("SE",0);
+		octaves.put("TO",0);
+		octaves.put("TRANSP",0);
 
 		volumes.put("UW",0.30);
 		volumes.put("SHAFT",0.37);
+		volumes.put("SHAFT/LG",0.37);
+		volumes.put("SHAFT/GR",0.37);
+		volumes.put("TUNNEL",0.37);
+		volumes.put("UG",0.37);
+		volumes.put("MINE",0.37);
+		volumes.put("GALLERY",0.37);
 		volumes.put("CRATER",0.44);
 		volumes.put("WATERSURFACE",0.51);
 		volumes.put("SURFACE",0.58);
 		volumes.put("BARGE",0.65);
+		volumes.put("SHIP",0.65);
 		volumes.put("TOWER",0.82);
 		volumes.put("BALLOON",0.89);
 		volumes.put("AIRDROP",0.95);
+		volumes.put("ATMOSPH",1.0);
 		volumes.put("ROCKET",1.0);
+		volumes.put("SPACE",1.0);
 
 		try {
 			for (int i = 0; i < 5; i++){
